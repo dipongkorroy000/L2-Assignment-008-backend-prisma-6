@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import config from "./config";
 
 const app: Express = express();
 
@@ -10,7 +11,12 @@ app.use(express.json());
 dotenv.config();
 
 app.get("/", (req, res) => {
-  res.send("API is running");
+  res.send({
+    message: "Server is running",
+    environment: config.node_env,
+    uptime: process.uptime().toFixed(2) + "sec",
+    timeStamp: new Date().toISOString(),
+  });
 });
 
 app.use((req, res, next) => {
