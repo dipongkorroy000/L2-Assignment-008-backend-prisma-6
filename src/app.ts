@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import config from "./config";
 import router from "./app/routes";
+import notFound from "./app/middlewares/notFound";
+import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 
 const app: Express = express();
 
@@ -25,5 +27,9 @@ app.get("/", (req, res) => {
 app.use((req, res, next) => {
   res.status(404).json({ success: false, message: "Route Not Found" });
 });
+
+app.use(notFound);
+
+app.use(globalErrorHandler);
 
 export default app;
