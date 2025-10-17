@@ -13,4 +13,6 @@ export default {
     api_key: process.env.CLOUDINARY_API_KEY as string,
     api_secret: process.env.CLOUDINARY_API_SECRET as string,
   },
+  jwt_access_secret_key: process.env.JWT_ACCESS_SECRET_KEY as string,
+  jwt_refresh_secret_key: process.env.JWT_REFRESH_SECRET_KEY as string,
 };
