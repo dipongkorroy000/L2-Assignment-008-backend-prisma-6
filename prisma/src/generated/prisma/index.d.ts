@@ -4777,7 +4777,7 @@ export namespace Prisma {
     email: string
     name: string
     profilePhoto: string | null
-    address: string
+    address: string | null
     isDeleted: boolean
     createdAt: Date
     updatedAt: Date
@@ -4868,7 +4868,7 @@ export namespace Prisma {
       email: string
       name: string
       profilePhoto: string | null
-      address: string
+      address: string | null
       isDeleted: boolean
       createdAt: Date
       updatedAt: Date
@@ -6181,7 +6181,7 @@ export namespace Prisma {
     email?: StringFilter<"Patient"> | string
     name?: StringFilter<"Patient"> | string
     profilePhoto?: StringNullableFilter<"Patient"> | string | null
-    address?: StringFilter<"Patient"> | string
+    address?: StringNullableFilter<"Patient"> | string | null
     isDeleted?: BoolFilter<"Patient"> | boolean
     createdAt?: DateTimeFilter<"Patient"> | Date | string
     updatedAt?: DateTimeFilter<"Patient"> | Date | string
@@ -6193,7 +6193,7 @@ export namespace Prisma {
     email?: SortOrder
     name?: SortOrder
     profilePhoto?: SortOrderInput | SortOrder
-    address?: SortOrder
+    address?: SortOrderInput | SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -6208,7 +6208,7 @@ export namespace Prisma {
     NOT?: PatientWhereInput | PatientWhereInput[]
     name?: StringFilter<"Patient"> | string
     profilePhoto?: StringNullableFilter<"Patient"> | string | null
-    address?: StringFilter<"Patient"> | string
+    address?: StringNullableFilter<"Patient"> | string | null
     isDeleted?: BoolFilter<"Patient"> | boolean
     createdAt?: DateTimeFilter<"Patient"> | Date | string
     updatedAt?: DateTimeFilter<"Patient"> | Date | string
@@ -6220,7 +6220,7 @@ export namespace Prisma {
     email?: SortOrder
     name?: SortOrder
     profilePhoto?: SortOrderInput | SortOrder
-    address?: SortOrder
+    address?: SortOrderInput | SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -6237,7 +6237,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"Patient"> | string
     name?: StringWithAggregatesFilter<"Patient"> | string
     profilePhoto?: StringNullableWithAggregatesFilter<"Patient"> | string | null
-    address?: StringWithAggregatesFilter<"Patient"> | string
+    address?: StringNullableWithAggregatesFilter<"Patient"> | string | null
     isDeleted?: BoolWithAggregatesFilter<"Patient"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Patient"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Patient"> | Date | string
@@ -6523,7 +6523,7 @@ export namespace Prisma {
     id?: string
     name: string
     profilePhoto?: string | null
-    address: string
+    address?: string | null
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6535,7 +6535,7 @@ export namespace Prisma {
     email: string
     name: string
     profilePhoto?: string | null
-    address: string
+    address?: string | null
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6545,7 +6545,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6557,7 +6557,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6568,7 +6568,7 @@ export namespace Prisma {
     email: string
     name: string
     profilePhoto?: string | null
-    address: string
+    address?: string | null
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6578,7 +6578,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6589,7 +6589,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7397,7 +7397,7 @@ export namespace Prisma {
     id?: string
     name: string
     profilePhoto?: string | null
-    address: string
+    address?: string | null
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -7407,7 +7407,7 @@ export namespace Prisma {
     id?: string
     name: string
     profilePhoto?: string | null
-    address: string
+    address?: string | null
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -7505,7 +7505,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7515,7 +7515,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
