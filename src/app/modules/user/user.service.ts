@@ -2,7 +2,7 @@ import { Doctor, Prisma, UserRole } from "@prisma/client";
 import { fileUploader } from "../../helper/fileUploader";
 import { IOptions, paginationHelper } from "../../helper/paginationHelper";
 import { prisma } from "../../shared/prisma";
-import { createDoctorInput, createPatientInput } from "./user.interface";
+import { createAdminInput, createDoctorInput, createPatientInput } from "./user.interface";
 import bcryptjs from "bcryptjs";
 
 const createPatient = async (payload: createPatientInput, file: Express.Multer.File | undefined) => {
@@ -79,4 +79,25 @@ const createDoctor = async (payload: createDoctorInput, file: Express.Multer.Fil
   return result;
 };
 
-export const UserService = { createPatient, getAllUser, createDoctor };
+const createAdmin = async (payload: createAdminInput, file: Express.Multer.File | undefined) => {
+  if (file) {
+    const uploadResult = await fileUploader.uploadToCloudinary(file);
+    payload.admin.profilePhoto = uploadResult?.secure_url as string;
+  }
+
+  const hashedPassword: string = await bcryptjs.hash(payload.password, 10);
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.user.create({
+      data: { email: payload.admin.email, password: hashedPassword, role: UserRole.ADMIN },
+    });
+
+    const createdAdminData = await transactionClient.admin.create({ data: payload.admin });
+
+    return createdAdminData;
+  });
+
+  return result;
+};
+
+export const UserService = { createPatient, getAllUser, createDoctor, createAdmin };

@@ -22,3 +22,13 @@ export type createDoctorInput = {
     designation: string;
   };
 };
+
+export type createAdminInput = {
+  password: string;
+  admin: {
+    name: string;
+    email: string;
+    profilePhoto?: string;
+    contactNumber: string;
+  };
+};

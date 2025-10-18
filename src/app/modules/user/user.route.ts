@@ -13,7 +13,7 @@ router.post("/create-patient", fileUploader.upload.single("file"), (req: Request
   return UserController.createPatient(req, res, next);
 });
 
-router.get("/", UserController.getAllUser);
+router.get("/", auth(UserRole.ADMIN), UserController.getAllUser);
 
 router.post(
   "/create-doctor",
@@ -23,6 +23,16 @@ router.post(
     // console.log(req.body.data, req.file);
     req.body = UserValidation.createDoctorValidationSchema.parse(JSON.parse(req.body.data));
     return UserController.createDoctor(req, res, next);
+  }
+);
+
+router.post(
+  "/create-admin",
+  auth(UserRole.ADMIN),
+  fileUploader.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = UserValidation.createAdminValidationSchema.parse(JSON.parse(req.body.data));
+    return UserController.createAdmin(req, res, next);
   }
 );
 
