@@ -1,0 +1,25 @@
+import { NextFunction, Request, Response } from "express";
+import { jwtHelper } from "../helper/genarateToken";
+import config from "../../config";
+
+const auth = (...roles: string[]) => {
+  return async (req: Request & { user?: any }, res: Response, next: NextFunction) => {
+    try {
+      const token = req.cookies.get("accessToken");
+
+      if (!token) throw new Error("You are not authorized!");
+
+      const verifyTkn = jwtHelper.verifyToken(token, config.jwt_access_secret_key);
+
+      req.user = verifyTkn;
+
+      if (roles.length && !roles.includes(verifyTkn.role)) throw new Error("You are not authorized!");
+
+      next();
+    } catch (err) {
+      next(err);
+    }
+  };
+};
+
+export default auth;

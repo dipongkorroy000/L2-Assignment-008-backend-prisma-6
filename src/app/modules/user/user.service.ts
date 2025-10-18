@@ -1,8 +1,8 @@
-import { Prisma } from "@prisma/client";
+import { Doctor, Prisma, UserRole } from "@prisma/client";
 import { fileUploader } from "../../helper/fileUploader";
 import { IOptions, paginationHelper } from "../../helper/paginationHelper";
 import { prisma } from "../../shared/prisma";
-import { createPatientInput } from "./user.interface";
+import { createDoctorInput, createPatientInput } from "./user.interface";
 import bcryptjs from "bcryptjs";
 
 const createPatient = async (payload: createPatientInput, file: Express.Multer.File | undefined) => {
@@ -38,6 +38,8 @@ const getAllUser = async (filters: any, options: IOptions) => {
     });
   }
 
+  // const whereConditions: Prisma.UserWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
+
   const result = await prisma.user.findMany({
     skip: (page - 1) * limit,
     take: limit,
@@ -48,7 +50,33 @@ const getAllUser = async (filters: any, options: IOptions) => {
     select: { id: true, email: true, role: true, status: true, needPasswordChange: true },
   });
 
+  const total = await prisma.user.count({ where: { AND: andConditions } });
+
+  return {
+    meta: { page, limit, total },
+    data: result,
+  };
+};
+
+const createDoctor = async (payload: createDoctorInput, file: Express.Multer.File | undefined) => {
+  if (file) {
+    const uploadResult = await fileUploader.uploadToCloudinary(file);
+    payload.doctor.profilePhoto = uploadResult?.secure_url as string;
+  }
+
+  const hashedPassword: string = await bcryptjs.hash(payload.password, 10);
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.user.create({
+      data: { email: payload.doctor.email, password: hashedPassword, role: UserRole.DOCTOR },
+    });
+
+    const createdDoctorData = await transactionClient.doctor.create({ data: payload.doctor });
+
+    return createdDoctorData;
+  });
+
   return result;
 };
 
-export const UserService = { createPatient, getAllUser };
+export const UserService = { createPatient, getAllUser, createDoctor };
