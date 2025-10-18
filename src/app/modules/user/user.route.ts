@@ -10,4 +10,6 @@ router.post("/create-patient", fileUploader.upload.single("file"), (req: Request
   return UserController.createPatient(req, res, next);
 });
 
+router.get("/", UserController.getAllUser);
+
 export const userRoutes = router;
