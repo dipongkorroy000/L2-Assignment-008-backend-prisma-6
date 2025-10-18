@@ -1,11 +1,13 @@
 import express, { type Router } from "express";
 import { ScheduleController } from "./schedule.controller";
+import auth from "../../middlewares/auth";
+import { UserRole } from "@prisma/client";
 
 const router: Router = express.Router();
 
 router.post("/", ScheduleController.insertIntoDB);
 
-router.get("/", ScheduleController.schedulesForDoctor);
+router.get("/", auth(UserRole.DOCTOR, UserRole.ADMIN), ScheduleController.schedulesForDoctor);
 
 router.delete("/:id", ScheduleController.deleteScheduleFromDB);
 
