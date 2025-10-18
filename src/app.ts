@@ -1,4 +1,4 @@
-import express, { type Express } from "express";
+import express, { type Application, type Express } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import config from "./config";
@@ -7,7 +7,7 @@ import notFound from "./app/middlewares/notFound";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import cookieParser from "cookie-parser";
 
-const app: Express = express();
+const app: Application = express();
 
 app.use(cors());
 app.use(express.json());

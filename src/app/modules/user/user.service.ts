@@ -1,4 +1,4 @@
-import { Doctor, Prisma, UserRole } from "@prisma/client";
+import { Prisma, UserRole } from "@prisma/client";
 import { fileUploader } from "../../helper/fileUploader";
 import { IOptions, paginationHelper } from "../../helper/paginationHelper";
 import { prisma } from "../../shared/prisma";
