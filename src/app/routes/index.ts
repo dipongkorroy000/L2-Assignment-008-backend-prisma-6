@@ -7,6 +7,7 @@ import { tourRoutes } from "../modules/tours/tour.routes";
 import { categoryRoutes } from "../modules/category/category.routes";
 import { paymentRoutes } from "../modules/payments/payment.routes";
 import { requestedTourRoutes } from "../modules/requested-tour/requested-tour.routes";
+import { messageRoutes } from "../modules/message/message.routes";
 
 const router: Router = express.Router();
 
@@ -19,6 +20,7 @@ const moduleRoutes = [
   {path: "/request-tour", route: requestedTourRoutes},
   {path: "/stats", route: statsRoutes},
   {path: "/review", route: reviewsRoutes},
+  {path: "/message", route: messageRoutes},
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
