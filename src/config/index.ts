@@ -1,18 +1,32 @@
 import dotenv from "dotenv";
-import path from "path";
 
-dotenv.config({ path: path.join(process.cwd(), ".env") });
+dotenv.config();
 
 export default {
-  node_env: process.env.NODE_ENV,
-  port: process.env.PORT,
-  database_url: process.env.DATABASE_URL,
-  bcrypt_salt_round: process.env.HASH_PASSWORD,
-  cloudinary: {
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME as string,
-    api_key: process.env.CLOUDINARY_API_KEY as string,
-    api_secret: process.env.CLOUDINARY_API_SECRET as string,
+  NODE_ENV: process.env.NODE_ENV,
+  PORT: process.env.PORT,
+  DATABASE_URL: process.env.DATABASE_URL,
+
+  BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND as string,
+
+  JWT: {
+    ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,
+    ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
+    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET as string,
+    REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
   },
-  jwt_access_secret_key: process.env.JWT_ACCESS_SECRET_KEY as string,
-  jwt_refresh_secret_key: process.env.JWT_REFRESH_SECRET_KEY as string,
+
+  SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
+  SUPER_ADMIN_PASS: process.env.SUPER_ADMIN_PASS as string,
+  SUPER_ADMIN_CONTACT: process.env.SUPER_ADMIN_CONTACT as string,
+
+  CLOUDINARY: {
+    CLOUD_NAME: process.env.CLOUD_NAME as string,
+    API_KEY: process.env.API_KEY as string,
+    API_SECRET: process.env.API_SECRET as string,
+  },
+
+  STRIPE: {
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
+  },
 };

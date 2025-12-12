@@ -1,19 +1,22 @@
-import { NextFunction, Request, Response } from "express";
-import { jwtHelper } from "../helper/genarateToken";
+import type {NextFunction, Request, Response} from "express";
+import status from "http-status";
+import ServerError from "../errors/ServerError";
+
+import type {JwtPayload} from "jsonwebtoken";
 import config from "../../config";
+import {jsonwebtoken} from "../utils/jsonwebtoken";
 
 const auth = (...roles: string[]) => {
-  return async (req: Request & { user?: any }, res: Response, next: NextFunction) => {
+  return async (req: Request & {token?: any}, res: Response, next: NextFunction) => {
     try {
-      const token = req.cookies.accessToken;
+      const accessToken = req.cookies.accessToken || req.headers.accessToken;
 
-      if (!token) throw new Error("You are not authorized!");
+      if (!accessToken) throw new ServerError(status.UNAUTHORIZED, "You are not authorized!");
 
-      const verifyTkn = jwtHelper.verifyToken(token, config.jwt_access_secret_key);
+      const token = jsonwebtoken.verifyToken(accessToken, config.JWT.ACCESS_TOKEN_SECRET) as JwtPayload;
+      req.token = token;
 
-      req.user = verifyTkn;
-
-      if (roles.length && !roles.includes(verifyTkn.role)) throw new Error("You are not authorized user!");
+      if (roles.length && !roles.includes(token.role)) throw new ServerError(status.UNAUTHORIZED, "You are not authorized user!");
 
       next();
     } catch (err) {

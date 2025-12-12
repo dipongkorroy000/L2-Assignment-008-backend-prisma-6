@@ -1,0 +1,43 @@
+model Payment {
+    id                 Int           @id @default(autoincrement())
+    amount             Float
+    status             PaymentStatus @default(UNPAID)
+    paymentGatewayData Json?
+    transactionId      String        @unique @default(uuid())
+    createdAt          DateTime      @default(now())
+    updatedAt          DateTime      @updatedAt
+    requestFormId      Int           @unique
+    requestForm        RequestForm   @relation(fields: [requestFormId], references: [id])
+
+    @@map("payments")
+}
+
+model RequestForm {
+    id        Int               @id @default(autoincrement())
+    status    RequestFormStatus @default(PENDING)
+    guideId   Int
+    guide     Guide             @relation(fields: [guideId], references: [id])
+    tourId    Int
+    tour      Tour              @relation(fields: [tourId], references: [id])
+    touristId Int
+    tourist   Tourist           @relation(fields: [touristId], references: [id])
+    tourDate  DateTime
+    comment   String
+    createdAt DateTime          @default(now())
+    updatedAt DateTime          @updatedAt
+    payments  Payment?
+    review Review?
+    @@map("requestForm")
+}
+
+model Review {
+    id Int @id @default(autoincrement())
+    rating          Float
+    comment         String?
+    requestedFormId Int         @unique
+    requestedForm   RequestForm @relation(fields: [requestedFormId], references: [id])
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+
+    @@map("reviews")
+}

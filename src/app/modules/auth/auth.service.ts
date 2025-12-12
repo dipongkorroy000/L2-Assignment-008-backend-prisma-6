@@ -1,23 +1,92 @@
-import { UserStatus } from "@prisma/client";
-import { prisma } from "../../shared/prisma";
-import { Login } from "./auth.interface";
+import type {Login} from "./auth.interface";
+import status from "http-status";
 import bcryptjs from "bcryptjs";
+import {jsonwebtoken} from "../../utils/jsonwebtoken";
 import config from "../../../config";
-import { jwtHelper } from "../../helper/genarateToken";
+import ServerError from "../../errors/ServerError";
+import {prisma} from "../../shared/prisma";
+import {UserStatus} from "@prisma/client";
 
 const login = async (payload: Login) => {
-  const user = await prisma.user.findUnique({ where: { email: payload.email, status: UserStatus.ACTIVE } });
+  const user = await prisma.user.findUnique({where: {email: payload.email, status: UserStatus.ACTIVE}});
 
-  if (!user) throw new Error("User not found");
+  if (!user) throw new ServerError(status.NOT_FOUND, "User not found");
 
   const isCorrectPass = await bcryptjs.compare(payload.password, user.password);
 
-  if (!isCorrectPass) throw new Error("Password is incorrect");
+  if (!isCorrectPass) throw new ServerError(status.BAD_REQUEST, "Password is incorrect");
 
-  const accessToken = await jwtHelper.generateToken({ email: user.email, role: user.role, secret: config.jwt_access_secret_key, expireIn: "1d" });
-  const refreshToken = await jwtHelper.generateToken({ email: user.email, role: user.role, secret: config.jwt_refresh_secret_key, expireIn: "30d" });
+  const accessToken = await jsonwebtoken.generateToken({
+    email: user.email,
+    role: user.role,
+    secret: config.JWT.ACCESS_TOKEN_SECRET,
+    expiresIn: config.JWT.ACCESS_TOKEN_EXPIRES_IN,
+  });
 
-  return { accessToken, refreshToken, needPasswordChange: user.needPasswordChange };
+  const refreshToken = await jsonwebtoken.generateToken({
+    email: user.email,
+    role: user.role,
+    secret: config.JWT.REFRESH_TOKEN_SECRET,
+    expiresIn: config.JWT.REFRESH_TOKEN_EXPIRES_IN,
+  });
+
+  return {accessToken, refreshToken};
 };
 
-export const AuthService = { login };
+const getProfile = async (email: string) => {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {email: email, status: UserStatus.ACTIVE},
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      status: true,
+      admin: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profilePhoto: true,
+          contactNumber: true,
+          address: true,
+          gender: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      guide: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profilePhoto: true,
+          contactNumber: true,
+          address: true,
+          gender: true,
+          languages: true,
+          averageRating: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      tourist: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profilePhoto: true,
+          address: true,
+          gender: true,
+          contactNumber: true,
+          languages: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+    },
+  });
+
+  return user;
+};
+
+export const authService = {login, getProfile};

@@ -1,17 +1,38 @@
-import { Request, Response } from "express";
+import type {NextFunction, Request, Response} from "express";
 import catchAsync from "../../shared/catchAsync";
-import { AuthService } from "./auth.service";
+import {authService} from "./auth.service";
+import config from "../../../config";
 import sendResponse from "../../shared/sendResponse";
+import tokenDateValidate from "../../utils/tokenMaxAge";
+import status from "http-status";
+import type {JwtPayload} from "jsonwebtoken";
 
-const login = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.login(req.body);
+const login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await authService.login(req.body);
 
-  const { accessToken, refreshToken, needPasswordChange } = result;
+    const {accessToken, refreshToken} = result;
 
-  res.cookie("accessToken", accessToken, { secure: true, httpOnly: true, sameSite: "none", maxAge: 1000 * 60 * 60 });
-  res.cookie("refreshToken", accessToken, { secure: true, httpOnly: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 30 });
+    const accessTokenExpiresIn = config.JWT.ACCESS_TOKEN_EXPIRES_IN;
+    const refreshTokenExpiresIn = config.JWT.REFRESH_TOKEN_EXPIRES_IN;
 
-  sendResponse(res, { status: 200, success: true, message: "Login Successfully", data: { needPasswordChange } });
+    const tokenAge = tokenDateValidate({accessTokenExpiresIn, refreshTokenExpiresIn});
+
+    res.cookie("accessToken", accessToken, {secure: true, httpOnly: true, sameSite: "none", maxAge: tokenAge.accessTokenMaxAge});
+    res.cookie("refreshToken", refreshToken, {secure: true, httpOnly: true, sameSite: "none", maxAge: tokenAge.refreshTokenMaxAge});
+
+    sendResponse(res, {status: 200, success: true, message: "Login Successfully", data: null});
+  } catch (error) {
+    next(error);
+  }
 });
 
-export const AuthController = { login };
+const getProfile = catchAsync(async (req: Request & {token?: JwtPayload}, res: Response) => {
+  const email = req.token?.email;
+
+  const result = await authService.getProfile(email);
+
+  sendResponse(res, {status: status.OK, success: true, message: "User retrieve successfully!", data: result});
+});
+
+export const authController = {login, getProfile};

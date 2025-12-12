@@ -1,16 +1,28 @@
 enum UserRole {
-    PATIENT
-    DOCTOR
+    TOURIST
+    GUIDE
     ADMIN
 }
 
 enum UserStatus {
     ACTIVE
     INACTIVE
-    DELETED
+    BANNED
 }
 
 enum Gender {
     MALE
     FEMALE
+}
+
+enum PaymentStatus {
+    PAID
+    UNPAID
+}
+
+enum RequestFormStatus {
+    PENDING
+    CONFIRMED
+    COMPLETED
+    CANCELLED
 }

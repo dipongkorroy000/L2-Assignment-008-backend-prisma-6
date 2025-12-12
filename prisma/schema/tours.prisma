@@ -1,0 +1,40 @@
+model Tour {
+    id           Int    @id @default(autoincrement())
+    title        String @unique
+    description  String
+    tourFee      Int
+    groupMembers Int
+
+    categoryId Int
+    category   Category @relation(fields: [categoryId], references: [id])
+
+    duration      String
+    meetingPoint  String
+    destination   String
+    city          String
+    image         String
+    isActive      Boolean @default(true)
+    averageRating Float   @default(0.0)
+
+    requestForm RequestForm[]
+
+    guideId   Int
+    guide     Guide    @relation(fields: [guideId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Category {
+    id    Int    @id @default(autoincrement())
+    title String @unique
+    tour  Tour[]
+
+    @@map("categories")
+}
+
+model Message {
+    id      Int    @id @default(autoincrement())
+    name    String
+    email   String
+    message String
+}

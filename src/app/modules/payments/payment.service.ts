@@ -1,0 +1,91 @@
+
+import { PaymentStatus, UserRole } from "@prisma/client";
+import ServerError from "../../errors/ServerError";
+import { prisma } from "../../shared/prisma";
+import { stripe } from "../../shared/stripe";
+
+const paymentInit = async (touristEmail: string, tourFormId: number) => {
+  const tourist = await prisma.tourist.findUniqueOrThrow({where: {email: touristEmail}});
+
+  const requestForm = await prisma.requestForm.findUniqueOrThrow({
+    where: {id: tourFormId},
+    include: {
+      guide: {select: {name: true}},
+      tour: {select: {id: true, tourFee: true}},
+      tourist: {select: {email: true}},
+    },
+  });
+
+  if (tourist.email !== requestForm.tourist.email) throw new ServerError(400, "Unauthorized user");
+
+  const result = await prisma.$transaction(async (tnx) => {
+    const payment = await tnx.payment.create({data: {amount: requestForm.tour.tourFee, requestFormId: requestForm.id}});
+
+    // payment
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      customer_email: tourist.email,
+      line_items: [
+        {
+          price_data: {
+            currency: "bdt",
+            product_data: {name: `Tour with ${requestForm.guide.name}`},
+            unit_amount: payment.amount * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      metadata: {paymentId: payment.id, touristId: tourist.id},
+
+      success_url: "http://localhost:3000/api/v1/payment/success",
+      cancel_url: "http://localhost:3000/api/v1/payment/cancel",
+    });
+
+    return {paymentUrl: session.url};
+  });
+
+  return result;
+};
+
+const getPayments = async (email: string) => {
+  const user = await prisma.user.findUniqueOrThrow({where: {email}});
+
+  if (user.role == UserRole.GUIDE) {
+    const guide = await prisma.guide.findUniqueOrThrow({where: {email}});
+
+    return await prisma.requestForm.findMany({
+      where: {guideId: guide.id},
+      select: {
+        payments: {select: {amount: true, updatedAt: true, status: true, transactionId: true}},
+        tour: {select: {title: true}},
+      },
+    });
+  } else if (user.role === UserRole.TOURIST) {
+    const tourist = await prisma.tourist.findUniqueOrThrow({where: {email}});
+
+    return await prisma.requestForm.findMany({
+      where: {tourId: tourist.id},
+      select: {
+        payments: {select: {amount: true, updatedAt: true, status: true, transactionId: true}},
+      },
+    });
+  }
+
+  if (user.role === UserRole.ADMIN) {
+    const data = await prisma.payment.findMany({
+      where: {status: PaymentStatus.PAID},
+      select: {
+        amount: true,
+        updatedAt: true,
+        paymentGatewayData: true,
+        transactionId: true,
+        status: true,
+        requestForm: {select: {guide: {select: {email: true}}, tourist: {select: {email: true}}}},
+      },
+    });
+  }
+  return null;
+};
+
+export const PaymentService = {paymentInit, getPayments};
