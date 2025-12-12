@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import {StripeController} from "./app/modules/stripe/stripe.controller";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import config from "./config";
 
 const app: Application = express();
 
@@ -13,7 +14,7 @@ app.post("/api/v1/payment/webhook", express.raw({type: "application/json"}), Str
 // parser
 app.use(express.json());
 
-app.use(cors({origin: "http://localhost:3000", credentials: true}));
+app.use(cors({origin: config.FRONTEND_URL, credentials: true}));
 app.use(cookieParser());
 
 app.use("/api/v1", router);

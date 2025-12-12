@@ -20,6 +20,7 @@ declare const _default: {
     STRIPE: {
         STRIPE_SECRET_KEY: string;
     };
+    FRONTEND_URL: string | undefined;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

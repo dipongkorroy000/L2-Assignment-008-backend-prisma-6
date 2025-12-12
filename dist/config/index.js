@@ -27,5 +27,6 @@ exports.default = {
     STRIPE: {
         STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     },
+    FRONTEND_URL: process.env.FRONTEND_URL,
 };
 //# sourceMappingURL=index.js.map
