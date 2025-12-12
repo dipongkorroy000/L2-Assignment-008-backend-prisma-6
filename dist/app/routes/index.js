@@ -12,6 +12,7 @@ const tour_routes_1 = require("../modules/tours/tour.routes");
 const category_routes_1 = require("../modules/category/category.routes");
 const payment_routes_1 = require("../modules/payments/payment.routes");
 const requested_tour_routes_1 = require("../modules/requested-tour/requested-tour.routes");
+const message_routes_1 = require("../modules/message/message.routes");
 const router = express_1.default.Router();
 const moduleRoutes = [
     { path: "/auth", route: auth_routes_1.authRoutes },
@@ -22,6 +23,7 @@ const moduleRoutes = [
     { path: "/request-tour", route: requested_tour_routes_1.requestedTourRoutes },
     { path: "/stats", route: stats_routes_1.statsRoutes },
     { path: "/review", route: review_routes_1.reviewsRoutes },
+    { path: "/message", route: message_routes_1.messageRoutes },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
 exports.default = router;
