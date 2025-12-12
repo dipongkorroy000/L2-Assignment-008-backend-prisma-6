@@ -1,0 +1,1 @@
+{"version":3,"file":"requested-tour.interface.d.ts","sourceRoot":"","sources":["../../../../src/app/modules/requested-tour/requested-tour.interface.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,YAAY;IAC3B,OAAO,EAAE,MAAM,CAAC;IAChB,MAAM,EAAE,MAAM,CAAC;IACf,OAAO,EAAE,MAAM,CAAC;IAChB,QAAQ,EAAE,IAAI,CAAC;CAChB"}
