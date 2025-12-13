@@ -13,7 +13,7 @@ app.post("/api/v1/payment/webhook", express.raw({type: "application/json"}), Str
 // parser
 app.use(express.json());
 
-app.use(cors({origin: "http://localhost:3000", credentials: true}));
+app.use(cors({origin: "https://l2-assignment-008-frontend-577l.vercel.app", credentials: true}));
 app.use(cookieParser());
 
 app.use("/api/v1", router);
