@@ -8,8 +8,7 @@ const catchAsync_1 = __importDefault(require("../../shared/catchAsync"));
 const payment_service_1 = require("./payment.service");
 const sendResponse_1 = __importDefault(require("../../shared/sendResponse"));
 const paymentInit = (0, catchAsync_1.default)(async (req, res) => {
-    const { email } = req.token;
-    const result = await payment_service_1.PaymentService.paymentInit(email, Number(req.params.id));
+    const result = await payment_service_1.PaymentService.paymentInit(Number(req.params.id));
     (0, sendResponse_1.default)(res, { status: 201, success: true, message: "Payment paid successfully!", data: result });
 });
 const getPayments = (0, catchAsync_1.default)(async (req, res) => {

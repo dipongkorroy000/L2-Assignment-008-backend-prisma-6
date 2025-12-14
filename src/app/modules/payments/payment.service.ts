@@ -5,19 +5,16 @@ import { prisma } from "../../shared/prisma";
 import { stripe } from "../../shared/stripe";
 import config from "../../../config";
 
-const paymentInit = async (touristEmail: string, tourFormId: number) => {
-  const tourist = await prisma.tourist.findUniqueOrThrow({where: {email: touristEmail}});
+const paymentInit = async (tourFormId: number) => {
 
   const requestForm = await prisma.requestForm.findUniqueOrThrow({
     where: {id: tourFormId},
     include: {
       guide: {select: {name: true}},
       tour: {select: {id: true, tourFee: true}},
-      tourist: {select: {email: true}},
+      tourist: {select: {id: true, email: true}},
     },
   });
-
-  if (tourist.email !== requestForm.tourist.email) throw new ServerError(400, "Unauthorized user");
 
   const result = await prisma.$transaction(async (tnx) => {
     const payment = await tnx.payment.create({data: {amount: requestForm.tour.tourFee, requestFormId: requestForm.id}});
@@ -26,7 +23,7 @@ const paymentInit = async (touristEmail: string, tourFormId: number) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      customer_email: tourist.email,
+      customer_email: requestForm.tourist.email,
       line_items: [
         {
           price_data: {
@@ -37,7 +34,7 @@ const paymentInit = async (touristEmail: string, tourFormId: number) => {
           quantity: 1,
         },
       ],
-      metadata: {paymentId: payment.id, touristId: tourist.id},
+      metadata: {paymentId: payment.id, touristId: requestForm.tourist.id},
 
       success_url: `${config.PAYMENT_SUCCESS_URL}?transactionId=${payment.transactionId}`,
       cancel_url: `${config.PAYMENT_CANCEL_URL}?transactionId=${payment.transactionId}`,

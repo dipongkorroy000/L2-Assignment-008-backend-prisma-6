@@ -5,29 +5,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentService = void 0;
 const client_1 = require("@prisma/client");
-const ServerError_1 = __importDefault(require("../../errors/ServerError"));
 const prisma_1 = require("../../shared/prisma");
 const stripe_1 = require("../../shared/stripe");
 const config_1 = __importDefault(require("../../../config"));
-const paymentInit = async (touristEmail, tourFormId) => {
-    const tourist = await prisma_1.prisma.tourist.findUniqueOrThrow({ where: { email: touristEmail } });
+const paymentInit = async (tourFormId) => {
     const requestForm = await prisma_1.prisma.requestForm.findUniqueOrThrow({
         where: { id: tourFormId },
         include: {
             guide: { select: { name: true } },
             tour: { select: { id: true, tourFee: true } },
-            tourist: { select: { email: true } },
+            tourist: { select: { id: true, email: true } },
         },
     });
-    if (tourist.email !== requestForm.tourist.email)
-        throw new ServerError_1.default(400, "Unauthorized user");
     const result = await prisma_1.prisma.$transaction(async (tnx) => {
         const payment = await tnx.payment.create({ data: { amount: requestForm.tour.tourFee, requestFormId: requestForm.id } });
         // payment
         const session = await stripe_1.stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
-            customer_email: tourist.email,
+            customer_email: requestForm.tourist.email,
             line_items: [
                 {
                     price_data: {
@@ -38,7 +34,7 @@ const paymentInit = async (touristEmail, tourFormId) => {
                     quantity: 1,
                 },
             ],
-            metadata: { paymentId: payment.id, touristId: tourist.id },
+            metadata: { paymentId: payment.id, touristId: requestForm.tourist.id },
             success_url: `${config_1.default.PAYMENT_SUCCESS_URL}?transactionId=${payment.transactionId}`,
             cancel_url: `${config_1.default.PAYMENT_CANCEL_URL}?transactionId=${payment.transactionId}`,
         });

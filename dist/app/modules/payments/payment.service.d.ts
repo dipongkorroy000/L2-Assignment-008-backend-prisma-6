@@ -1,5 +1,5 @@
 export declare const PaymentService: {
-    paymentInit: (touristEmail: string, tourFormId: number) => Promise<{
+    paymentInit: (tourFormId: number) => Promise<{
         paymentUrl: string | null;
     }>;
     getPayments: (email: string) => Promise<{

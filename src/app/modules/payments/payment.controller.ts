@@ -4,10 +4,9 @@ import type {JwtPayload} from "jsonwebtoken";
 import {PaymentService} from "./payment.service";
 import sendResponse from "../../shared/sendResponse";
 
-const paymentInit = catchAsync(async (req: Request & {token?: JwtPayload}, res: Response) => {
-  const {email} = req.token as JwtPayload;
+const paymentInit = catchAsync(async (req: Request, res: Response) => {
 
-  const result = await PaymentService.paymentInit(email as string, Number(req.params.id));
+  const result = await PaymentService.paymentInit(Number(req.params.id));
 
   sendResponse(res, {status: 201, success: true, message: "Payment paid successfully!", data: result});
 });
