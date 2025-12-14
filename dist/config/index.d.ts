@@ -19,6 +19,7 @@ declare const _default: {
     };
     STRIPE: {
         STRIPE_SECRET_KEY: string;
+        STRIPE_WEBHOOK_SECRET: string;
     };
     FRONTEND_URL: string | undefined;
     PAYMENT_SUCCESS_URL: string;

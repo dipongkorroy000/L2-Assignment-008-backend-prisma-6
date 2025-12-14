@@ -26,6 +26,7 @@ exports.default = {
     },
     STRIPE: {
         STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+        STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     },
     FRONTEND_URL: process.env.FRONTEND_URL,
     PAYMENT_SUCCESS_URL: process.env.PAYMENT_SUCCESS_URL,

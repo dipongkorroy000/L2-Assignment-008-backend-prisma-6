@@ -8,9 +8,10 @@ const catchAsync_1 = __importDefault(require("../../shared/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../shared/sendResponse"));
 const stripe_service_1 = require("./stripe.service");
 const stripe_1 = require("../../shared/stripe");
+const config_1 = __importDefault(require("../../../config"));
 const handleStripeWebhookEvent = (0, catchAsync_1.default)(async (req, res) => {
     const sig = req.headers["stripe-signature"];
-    const webhookSecret = ""; // call localy secret-> stript
+    const webhookSecret = config_1.default.STRIPE.STRIPE_WEBHOOK_SECRET; // call localy secret-> stript
     let event;
     try {
         event = stripe_1.stripe.webhooks.constructEvent(req.body, sig, webhookSecret);

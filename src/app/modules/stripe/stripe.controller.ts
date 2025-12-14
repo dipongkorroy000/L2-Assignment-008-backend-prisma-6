@@ -4,10 +4,11 @@ import sendResponse from "../../shared/sendResponse";
 
 import {StripeService} from "./stripe.service";
 import {stripe} from "../../shared/stripe";
+import config from "../../../config";
 
 const handleStripeWebhookEvent = catchAsync(async (req: Request, res: Response) => {
   const sig = req.headers["stripe-signature"] as string;
-  const webhookSecret = ""; // call localy secret-> stript
+  const webhookSecret = config.STRIPE.STRIPE_WEBHOOK_SECRET; // call localy secret-> stript
 
   let event;
   try {
