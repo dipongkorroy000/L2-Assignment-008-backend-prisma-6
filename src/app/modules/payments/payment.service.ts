@@ -15,18 +15,15 @@ const paymentInit = async (tourFormId: number) => {
   });
 
   const result = await prisma.$transaction(async (tnx) => {
-    const existingPayment = await prisma.payment.findUnique({
+    let payment = await prisma.payment.findUnique({
       where: {requestFormId: tourFormId},
     });
 
-    console.log(result);
+    if (payment?.status === PaymentStatus.PAID) throw new ServerError(400, "Already payment");
 
-    if (existingPayment) {
-      // যদি payment আগে থেকেই থাকে, তাহলে নতুন করে create না করে সেটাই ফেরত দাও
-      return {paymentUrl: existingPayment.paymentGatewayData};
+    if (!payment) {
+      payment = await tnx.payment.create({data: {amount: requestForm.tour.tourFee, requestFormId: requestForm.id}});
     }
-
-    const payment = await tnx.payment.create({data: {amount: requestForm.tour.tourFee, requestFormId: requestForm.id}});
 
     // payment
     const session = await stripe.checkout.sessions.create({
