@@ -21,7 +21,7 @@ const handleStripeWebhookEvent = catchAsync(async (req: Request, res: Response) 
 
   const result = await StripeService.handleStripeWebhookEvent(event);
 
-  sendResponse(res, {status: 200, success: true, message: "Webhook req send successfully", data: result});
+   res.status(200).send("Webhook received");
 });
 
 export const StripeController = {handleStripeWebhookEvent};
