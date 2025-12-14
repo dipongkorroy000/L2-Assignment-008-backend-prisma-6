@@ -67,7 +67,7 @@ const getTourById = async (id) => {
         where: { id },
         select: {
             guide: {
-                select: { email: true, contactNumber: true, profilePhoto: true, averageRating: true, languages: true, name: true },
+                select: { id: true, email: true, contactNumber: true, profilePhoto: true, averageRating: true, languages: true, name: true },
             },
             averageRating: true,
             createdAt: true,

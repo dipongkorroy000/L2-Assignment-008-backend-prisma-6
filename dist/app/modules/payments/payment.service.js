@@ -8,6 +8,7 @@ const client_1 = require("@prisma/client");
 const ServerError_1 = __importDefault(require("../../errors/ServerError"));
 const prisma_1 = require("../../shared/prisma");
 const stripe_1 = require("../../shared/stripe");
+const config_1 = __importDefault(require("../../../config"));
 const paymentInit = async (touristEmail, tourFormId) => {
     const tourist = await prisma_1.prisma.tourist.findUniqueOrThrow({ where: { email: touristEmail } });
     const requestForm = await prisma_1.prisma.requestForm.findUniqueOrThrow({
@@ -38,8 +39,8 @@ const paymentInit = async (touristEmail, tourFormId) => {
                 },
             ],
             metadata: { paymentId: payment.id, touristId: tourist.id },
-            success_url: "http://localhost:3000/api/v1/payment/success",
-            cancel_url: "http://localhost:3000/api/v1/payment/cancel",
+            success_url: config_1.default.PAYMENT_SUCCESS_URL,
+            cancel_url: config_1.default.PAYMENT_CANCEL_URL,
         });
         return { paymentUrl: session.url };
     });

@@ -28,5 +28,7 @@ exports.default = {
         STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     },
     FRONTEND_URL: process.env.FRONTEND_URL,
+    PAYMENT_SUCCESS_URL: process.env.PAYMENT_SUCCESS_URL,
+    PAYMENT_CANCEL_URL: process.env.PAYMENT_CANCEL_URL,
 };
 //# sourceMappingURL=index.js.map

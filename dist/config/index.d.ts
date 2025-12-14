@@ -21,6 +21,8 @@ declare const _default: {
         STRIPE_SECRET_KEY: string;
     };
     FRONTEND_URL: string | undefined;
+    PAYMENT_SUCCESS_URL: string;
+    PAYMENT_CANCEL_URL: string;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

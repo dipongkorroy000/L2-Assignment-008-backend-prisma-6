@@ -3,6 +3,7 @@ import { PaymentStatus, UserRole } from "@prisma/client";
 import ServerError from "../../errors/ServerError";
 import { prisma } from "../../shared/prisma";
 import { stripe } from "../../shared/stripe";
+import config from "../../../config";
 
 const paymentInit = async (touristEmail: string, tourFormId: number) => {
   const tourist = await prisma.tourist.findUniqueOrThrow({where: {email: touristEmail}});
@@ -38,8 +39,8 @@ const paymentInit = async (touristEmail: string, tourFormId: number) => {
       ],
       metadata: {paymentId: payment.id, touristId: tourist.id},
 
-      success_url: "http://localhost:3000/api/v1/payment/success",
-      cancel_url: "http://localhost:3000/api/v1/payment/cancel",
+      success_url: config.PAYMENT_SUCCESS_URL,
+      cancel_url: config.PAYMENT_CANCEL_URL,
     });
 
     return {paymentUrl: session.url};

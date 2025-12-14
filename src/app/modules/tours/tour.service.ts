@@ -1,8 +1,7 @@
-
-import { Prisma } from "@prisma/client";
+import {Prisma} from "@prisma/client";
 import ServerError from "../../errors/ServerError";
 import {pagination, type IPagination} from "../../middlewares/pagination";
-import { prisma } from "../../shared/prisma";
+import {prisma} from "../../shared/prisma";
 import {imageFileUploader} from "../../utils/imageFileUploader";
 
 const createTour = async (email: string, payload: any, file: Express.Multer.File | undefined) => {
@@ -78,7 +77,7 @@ const getTourById = async (id: number) => {
     where: {id},
     select: {
       guide: {
-        select: {email: true, contactNumber: true, profilePhoto: true, averageRating: true, languages: true, name: true},
+        select: {id: true, email: true, contactNumber: true, profilePhoto: true, averageRating: true, languages: true, name: true},
       },
       averageRating: true,
       createdAt: true,

@@ -64,6 +64,7 @@ export declare const tourService: {
         createdAt: Date;
         guide: {
             email: string;
+            id: number;
             name: string;
             profilePhoto: string | null;
             contactNumber: string;
