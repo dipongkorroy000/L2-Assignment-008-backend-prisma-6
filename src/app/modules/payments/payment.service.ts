@@ -1,12 +1,10 @@
-
-import { PaymentStatus, UserRole } from "@prisma/client";
+import {PaymentStatus, UserRole} from "@prisma/client";
 import ServerError from "../../errors/ServerError";
-import { prisma } from "../../shared/prisma";
-import { stripe } from "../../shared/stripe";
+import {prisma} from "../../shared/prisma";
+import {stripe} from "../../shared/stripe";
 import config from "../../../config";
 
 const paymentInit = async (tourFormId: number) => {
-
   const requestForm = await prisma.requestForm.findUniqueOrThrow({
     where: {id: tourFormId},
     include: {
@@ -17,6 +15,17 @@ const paymentInit = async (tourFormId: number) => {
   });
 
   const result = await prisma.$transaction(async (tnx) => {
+    const existingPayment = await prisma.payment.findUnique({
+      where: {requestFormId: tourFormId},
+    });
+
+    console.log(result);
+
+    if (existingPayment) {
+      // যদি payment আগে থেকেই থাকে, তাহলে নতুন করে create না করে সেটাই ফেরত দাও
+      return {paymentUrl: existingPayment.paymentGatewayData};
+    }
+
     const payment = await tnx.payment.create({data: {amount: requestForm.tour.tourFee, requestFormId: requestForm.id}});
 
     // payment
@@ -86,8 +95,8 @@ const getPayments = async (email: string) => {
   return null;
 };
 
-const getPayment = async(transactionId: string)=>{
-  return prisma.payment.findUnique({where: {transactionId}})
-}
+const getPayment = async (transactionId: string) => {
+  return prisma.payment.findUnique({where: {transactionId}});
+};
 
 export const PaymentService = {paymentInit, getPayments, getPayment};

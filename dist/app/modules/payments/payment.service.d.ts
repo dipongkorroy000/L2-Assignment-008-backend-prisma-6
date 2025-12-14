@@ -1,6 +1,6 @@
 export declare const PaymentService: {
     paymentInit: (tourFormId: number) => Promise<{
-        paymentUrl: string | null;
+        paymentUrl: import("@prisma/client/runtime/library").JsonValue;
     }>;
     getPayments: (email: string) => Promise<{
         payments: {

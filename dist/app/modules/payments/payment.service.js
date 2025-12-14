@@ -18,6 +18,14 @@ const paymentInit = async (tourFormId) => {
         },
     });
     const result = await prisma_1.prisma.$transaction(async (tnx) => {
+        const existingPayment = await prisma_1.prisma.payment.findUnique({
+            where: { requestFormId: tourFormId },
+        });
+        console.log(result);
+        if (existingPayment) {
+            // যদি payment আগে থেকেই থাকে, তাহলে নতুন করে create না করে সেটাই ফেরত দাও
+            return { paymentUrl: existingPayment.paymentGatewayData };
+        }
         const payment = await tnx.payment.create({ data: { amount: requestForm.tour.tourFee, requestFormId: requestForm.id } });
         // payment
         const session = await stripe_1.stripe.checkout.sessions.create({
