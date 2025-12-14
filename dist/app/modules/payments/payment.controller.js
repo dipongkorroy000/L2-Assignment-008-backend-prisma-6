@@ -17,5 +17,9 @@ const getPayments = (0, catchAsync_1.default)(async (req, res) => {
     const result = await payment_service_1.PaymentService.getPayments(email);
     (0, sendResponse_1.default)(res, { status: 201, success: true, message: "Payment retrieved successfully!", data: result });
 });
-exports.PaymentController = { paymentInit, getPayments };
+const getPayment = (0, catchAsync_1.default)(async (req, res) => {
+    const result = await payment_service_1.PaymentService.getPayment(req.params.transactionId);
+    (0, sendResponse_1.default)(res, { status: 201, success: true, message: "Payment retrieved successfully!", data: result });
+});
+exports.PaymentController = { paymentInit, getPayments, getPayment };
 //# sourceMappingURL=payment.controller.js.map

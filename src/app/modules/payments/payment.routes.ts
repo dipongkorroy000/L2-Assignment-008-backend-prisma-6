@@ -10,4 +10,6 @@ router.post("/:id", auth(UserRole.TOURIST), PaymentController.paymentInit);
 
 router.get("/", auth(UserRole.TOURIST, UserRole.GUIDE, UserRole.ADMIN), PaymentController.getPayments);
 
+router.get("/:transactionId" , PaymentController.getPayment);
+
 export const paymentRoutes = router;

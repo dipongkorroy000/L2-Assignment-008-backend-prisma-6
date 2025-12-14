@@ -10,5 +10,15 @@ export declare const PaymentService: {
             transactionId: string;
         } | null;
     }[] | null>;
+    getPayment: (transactionId: string) => Promise<{
+        id: number;
+        status: import("@prisma/client").$Enums.PaymentStatus;
+        createdAt: Date;
+        updatedAt: Date;
+        amount: number;
+        requestFormId: number;
+        paymentGatewayData: import("@prisma/client/runtime/library").JsonValue | null;
+        transactionId: string;
+    } | null>;
 };
 //# sourceMappingURL=payment.service.d.ts.map

@@ -39,8 +39,8 @@ const paymentInit = async (touristEmail, tourFormId) => {
                 },
             ],
             metadata: { paymentId: payment.id, touristId: tourist.id },
-            success_url: config_1.default.PAYMENT_SUCCESS_URL,
-            cancel_url: config_1.default.PAYMENT_CANCEL_URL,
+            success_url: `${config_1.default.PAYMENT_SUCCESS_URL}?transactionId=${payment.transactionId}`,
+            cancel_url: `${config_1.default.PAYMENT_CANCEL_URL}?transactionId=${payment.transactionId}`,
         });
         return { paymentUrl: session.url };
     });
@@ -82,5 +82,8 @@ const getPayments = async (email) => {
     }
     return null;
 };
-exports.PaymentService = { paymentInit, getPayments };
+const getPayment = async (transactionId) => {
+    return prisma_1.prisma.payment.findUnique({ where: { transactionId } });
+};
+exports.PaymentService = { paymentInit, getPayments, getPayment };
 //# sourceMappingURL=payment.service.js.map

@@ -11,5 +11,6 @@ const client_1 = require("@prisma/client");
 const router = express_1.default.Router();
 router.post("/:id", (0, auth_1.default)(client_1.UserRole.TOURIST), payment_controller_1.PaymentController.paymentInit);
 router.get("/", (0, auth_1.default)(client_1.UserRole.TOURIST, client_1.UserRole.GUIDE, client_1.UserRole.ADMIN), payment_controller_1.PaymentController.getPayments);
+router.get("/:transactionId", payment_controller_1.PaymentController.getPayment);
 exports.paymentRoutes = router;
 //# sourceMappingURL=payment.routes.js.map

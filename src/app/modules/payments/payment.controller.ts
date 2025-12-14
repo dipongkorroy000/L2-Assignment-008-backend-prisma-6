@@ -20,4 +20,11 @@ const getPayments = catchAsync(async (req: Request & {token?: JwtPayload}, res: 
   sendResponse(res, {status: 201, success: true, message: "Payment retrieved successfully!", data: result});
 });
 
-export const PaymentController = {paymentInit, getPayments};
+const getPayment = catchAsync(async (req: Request, res: Response) => {
+
+  const result = await PaymentService.getPayment(req.params.transactionId as string);
+
+  sendResponse(res, {status: 201, success: true, message: "Payment retrieved successfully!", data: result});
+});
+
+export const PaymentController = {paymentInit, getPayments , getPayment};
