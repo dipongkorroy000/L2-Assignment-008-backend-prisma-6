@@ -7,11 +7,11 @@ import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import config from "./config";
 
 const app: Application = express();
-app.use(cors({origin: config.FRONTEND_URL, credentials: true}));
 
 // this webhook call(stripe call this api) -> when tourist can book then call this webhook for payment
 app.post("/api/v1/payment/webhook", express.raw({type: "application/json"}), StripeController.handleStripeWebhookEvent);
 
+app.use(cors({origin: config.FRONTEND_URL, credentials: true}));
 // parser
 app.use(express.json());
 
