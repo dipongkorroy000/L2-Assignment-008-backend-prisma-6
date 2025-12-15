@@ -12,6 +12,7 @@ const app: Application = express();
 app.post("/api/v1/payment/webhook", express.raw({type: "application/json"}), StripeController.handleStripeWebhookEvent);
 
 app.use(cors({origin: config.FRONTEND_URL, credentials: true}));
+
 // parser
 app.use(express.json());
 
