@@ -40,7 +40,7 @@ const paymentInit = async (tourFormId: number) => {
           quantity: 1,
         },
       ],
-      metadata: {paymentId: payment.id, touristId: requestForm.tourist.id},
+      metadata: {transactionId: payment.transactionId, touristId: requestForm.tourist.id},
 
       success_url: `${config.PAYMENT_SUCCESS_URL}?transactionId=${payment.transactionId}`,
       cancel_url: `${config.PAYMENT_CANCEL_URL}?transactionId=${payment.transactionId}`,

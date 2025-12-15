@@ -5,23 +5,18 @@ import {PaymentStatus} from "@prisma/client";
 const handleStripeWebhookEvent = async (event: Stripe.Event) => {
   switch (event.type) {
     case "checkout.session.completed": {
-      const session = event.data.object as any;
+      const session = await event.data.object as any;
 
-      console.log("payment session", session);
-
-      const paymentId = session.metadata?.paymentId;
-
-      console.log("paymentId session", paymentId);
+      const transactionId = await session.metadata?.transactionId;
 
       const result = await prisma.payment.update({
-        where: {id: paymentId},
+        where: {transactionId: transactionId},
         data: {
           status: session.payment_status === "paid" ? PaymentStatus.PAID : PaymentStatus.UNPAID,
           paymentGatewayData: session,
         },
       });
 
-      console.log("payment update result", result);
       break;
     }
 

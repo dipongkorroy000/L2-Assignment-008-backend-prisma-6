@@ -6,18 +6,15 @@ const client_1 = require("@prisma/client");
 const handleStripeWebhookEvent = async (event) => {
     switch (event.type) {
         case "checkout.session.completed": {
-            const session = event.data.object;
-            console.log("payment session", session);
-            const paymentId = session.metadata?.paymentId;
-            console.log("paymentId session", paymentId);
+            const session = await event.data.object;
+            const transactionId = await session.metadata?.transactionId;
             const result = await prisma_1.prisma.payment.update({
-                where: { id: paymentId },
+                where: { transactionId: transactionId },
                 data: {
                     status: session.payment_status === "paid" ? client_1.PaymentStatus.PAID : client_1.PaymentStatus.UNPAID,
                     paymentGatewayData: session,
                 },
             });
-            console.log("payment update result", result);
             break;
         }
         default:
