@@ -7,7 +7,7 @@ const getReviews = async (email) => {
     const guide = await prisma_1.prisma.guide.findUniqueOrThrow({ where: { email } });
     const reviews = await prisma_1.prisma.requestForm.findMany({
         where: { payments: { status: client_1.PaymentStatus.PAID }, guideId: guide.id },
-        include: { review: { select: { comment: true, rating: true, updatedAt: true } } },
+        include: { review: { select: { comment: true, rating: true, updatedAt: true } }, tour: { select: { title: true } } },
         orderBy: { review: { updatedAt: "desc" } },
     });
     return reviews;

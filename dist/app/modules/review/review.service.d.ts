@@ -5,6 +5,9 @@ export declare const reviewsService: {
             comment: string | null;
             rating: number;
         } | null;
+        tour: {
+            title: string;
+        };
     } & {
         id: number;
         status: import("@prisma/client").$Enums.RequestFormStatus;
