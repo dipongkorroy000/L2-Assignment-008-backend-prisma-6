@@ -1,4 +1,4 @@
-# 🏥 Health Care Server
+# 🏥 Local Guide Server
 
 A **Node.js + TypeScript** backend server designed for Local Guide applications.  
 This project leverages **Express.js**, **Prisma ORM**, and modern tooling to provide a scalable, secure, and maintainable backend infrastructure.
