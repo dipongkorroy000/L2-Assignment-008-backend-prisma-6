@@ -12,7 +12,7 @@ const globalErrorHandler_1 = __importDefault(require("./app/middlewares/globalEr
 const config_1 = __importDefault(require("./config"));
 const app = (0, express_1.default)();
 // this webhook call(stripe call this api) -> when tourist can book then call this webhook for payment
-app.post("/api/v1/payment/webhook", express_1.default.raw({ type: "application/json" }), stripe_controller_1.StripeController.handleStripeWebhookEvent);
+app.post("/webhook", express_1.default.raw({ type: "application/json" }), stripe_controller_1.StripeController.handleStripeWebhookEvent);
 app.use((0, cors_1.default)({ origin: config_1.default.FRONTEND_URL, credentials: true }));
 // parser
 app.use(express_1.default.json());
