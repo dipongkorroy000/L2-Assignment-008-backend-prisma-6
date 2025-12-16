@@ -10,7 +10,7 @@ const adminStats = async (email) => {
     const guides = await prisma_1.prisma.guide.count();
     const tours = await prisma_1.prisma.tour.count();
     const totalPayments = await prisma_1.prisma.payment.count({ where: { status: client_1.PaymentStatus.PAID } });
-    const totalEarning = await prisma_1.prisma.payment.aggregate({ _sum: { amount: true } });
+    const totalEarning = await prisma_1.prisma.payment.aggregate({ where: { status: client_1.PaymentStatus.PAID }, _sum: { amount: true } });
     return { meta: { admins, tourists, guides, tours, totalPayments, totalEarning: totalEarning._sum.amount || 0 } };
 };
 const guideStats = async (email) => {

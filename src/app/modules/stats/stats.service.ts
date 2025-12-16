@@ -11,7 +11,7 @@ const adminStats = async (email: string) => {
   const tours = await prisma.tour.count();
 
   const totalPayments = await prisma.payment.count({where: {status: PaymentStatus.PAID}});
-  const totalEarning = await prisma.payment.aggregate({_sum: {amount: true}});
+  const totalEarning = await prisma.payment.aggregate({where: {status: PaymentStatus.PAID}, _sum: {amount: true}});
 
   return {meta: {admins, tourists, guides, tours, totalPayments, totalEarning: totalEarning._sum.amount || 0}};
 };
