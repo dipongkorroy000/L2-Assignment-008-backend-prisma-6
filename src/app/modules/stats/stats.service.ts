@@ -1,6 +1,5 @@
-import { PaymentStatus } from "@prisma/client";
-import { prisma } from "../../shared/prisma";
-
+import {PaymentStatus} from "@prisma/client";
+import {prisma} from "../../shared/prisma";
 
 const adminStats = async (email: string) => {
   const user = await prisma.user.findUniqueOrThrow({where: {email}});
@@ -31,7 +30,7 @@ const guideStats = async (email: string) => {
 
   const totalEarning = await prisma.payment.aggregate({
     _sum: {amount: true},
-    where: {requestForm: {guideId: guide.id}},
+    where: {status: PaymentStatus.PAID, requestForm: {guideId: guide.id}},
   });
 
   return {
