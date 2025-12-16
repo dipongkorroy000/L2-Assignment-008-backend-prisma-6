@@ -25,7 +25,7 @@ const guideStats = async (email) => {
     });
     const totalEarning = await prisma_1.prisma.payment.aggregate({
         _sum: { amount: true },
-        where: { requestForm: { guideId: guide.id } },
+        where: { status: client_1.PaymentStatus.PAID, requestForm: { guideId: guide.id } },
     });
     return {
         meta: {
