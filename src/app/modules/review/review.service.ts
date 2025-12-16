@@ -7,7 +7,7 @@ const getReviews = async (email: string) => {
 
   const reviews = await prisma.requestForm.findMany({
     where: {payments: {status: PaymentStatus.PAID}, guideId: guide.id},
-    include: {review: {select: {comment: true, rating: true, updatedAt: true}}},
+    include: {review: {select: {comment: true, rating: true, updatedAt: true}}, tour: {select: {title: true}}},
     orderBy: {review: {updatedAt: "desc"}},
   });
 
