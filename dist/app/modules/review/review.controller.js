@@ -13,8 +13,7 @@ const getReviews = (0, catchAsync_1.default)(async (req, res) => {
     (0, sendResponse_1.default)(res, { status: 200, success: true, message: "Reviews retrieved successfully", data: result });
 });
 const createReview = (0, catchAsync_1.default)(async (req, res) => {
-    const { email } = req.token;
-    const result = await review_service_1.reviewsService.createReview(email, Number(req.params.id), req.body);
+    const result = await review_service_1.reviewsService.createReview(Number(req.params.id), req.body);
     (0, sendResponse_1.default)(res, { status: 200, success: true, message: "Reviews retrieved successfully", data: result });
 });
 exports.reviewsController = { getReviews, createReview };

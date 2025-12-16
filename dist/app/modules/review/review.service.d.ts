@@ -16,9 +16,12 @@ export declare const reviewsService: {
         tourDate: Date;
         comment: string;
     })[]>;
-    createReview: (email: string, requestedFormId: number, payload: {
+    createReview: (requestedFormId: number, payload: {
         comment: string;
         rating: number;
-    }) => Promise<void>;
+    }) => Promise<{
+        success: boolean;
+        averageRating: number;
+    }>;
 };
 //# sourceMappingURL=review.service.d.ts.map

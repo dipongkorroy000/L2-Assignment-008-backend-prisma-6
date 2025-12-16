@@ -83,6 +83,7 @@ const getPayments = async (email) => {
                 requestForm: { select: { guide: { select: { email: true } }, tourist: { select: { email: true } } } },
             },
         });
+        return data;
     }
     return null;
 };

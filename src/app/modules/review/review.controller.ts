@@ -10,10 +10,9 @@ const getReviews = catchAsync(async (req: Request & {token?: JwtPayload}, res: R
   sendResponse(res, {status: 200, success: true, message: "Reviews retrieved successfully", data: result});
 });
 
-const createReview = catchAsync(async (req: Request & {token?: JwtPayload}, res: Response) => {
-  const {email} = req.token as JwtPayload;
+const createReview = catchAsync(async (req: Request, res: Response) => {
 
-  const result = await reviewsService.createReview(email, Number(req.params.id), req.body);
+  const result = await reviewsService.createReview(Number(req.params.id), req.body);
   sendResponse(res, {status: 200, success: true, message: "Reviews retrieved successfully", data: result});
 });
 

@@ -10,6 +10,6 @@ const review_controller_1 = require("./review.controller");
 const client_1 = require("@prisma/client");
 const router = express_1.default.Router();
 router.get("/guide", (0, auth_1.default)(client_1.UserRole.GUIDE), review_controller_1.reviewsController.getReviews);
-router.patch("/tourist-create-review/:id", (0, auth_1.default)(client_1.UserRole.TOURIST), review_controller_1.reviewsController.createReview);
+router.patch("/tourist-create-review/:id", review_controller_1.reviewsController.createReview);
 exports.reviewsRoutes = router;
 //# sourceMappingURL=review.routes.js.map

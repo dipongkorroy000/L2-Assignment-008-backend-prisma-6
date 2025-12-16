@@ -1,7 +1,6 @@
-
-import { PaymentStatus } from "@prisma/client";
+import {PaymentStatus} from "@prisma/client";
 import ServerError from "../../errors/ServerError";
-import { prisma } from "../../shared/prisma";
+import {prisma} from "../../shared/prisma";
 
 const getReviews = async (email: string) => {
   const guide = await prisma.guide.findUniqueOrThrow({where: {email}});
@@ -15,14 +14,27 @@ const getReviews = async (email: string) => {
   return reviews;
 };
 
-const createReview = async (email: string, requestedFormId: number, payload: {comment: string, rating: number}) => {
-  const tourist = await prisma.tourist.findUniqueOrThrow({where: {email}});
+const createReview = async (requestedFormId: number, payload: {comment: string; rating: number}) => {
+  return await prisma.$transaction(async (tnx) => {
+    // 1. Create the review
+    await tnx.review.create({data: {requestedFormId, comment: payload.comment, rating: payload.rating}});
 
-  const requestedForm = await prisma.requestForm.findUniqueOrThrow({where: {id: requestedFormId}});
+    // 2. Find the related tourId
+    const requestForm = await tnx.requestForm.findUniqueOrThrow({where: {id: requestedFormId}, select: {tourId: true}});
 
-  if (tourist.id !== requestedForm.touristId) throw new ServerError(400, "Unauthorized user");
+    // 3. Calculate new average rating for this tour
+    const agg = await tnx.review.aggregate({
+      _avg: {rating: true},
+      where: {requestedForm: {tourId: requestForm.tourId}},
+    });
 
-  await prisma.review.create({ data: {requestedFormId, comment: payload.comment, rating: payload.rating}});
+    const newAverage = agg._avg.rating ?? 0;
+
+    // 4. Update the tour's averageRating
+    await tnx.tour.update({where: {id: requestForm.tourId}, data: {averageRating: newAverage}});
+
+    return {success: true, averageRating: newAverage};
+  });
 };
 
 export const reviewsService = {getReviews, createReview};
