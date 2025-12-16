@@ -1,4 +1,3 @@
-
 import config from "../../../config";
 
 import {imageFileUploader} from "../../utils/imageFileUploader";
@@ -6,8 +5,8 @@ import bcryptjs from "bcryptjs";
 import type {createAdminPayload, createGuidePayload, createTouristPayload} from "./user.interface";
 import {pagination, type IPagination} from "../../middlewares/pagination";
 import type {JwtPayload} from "jsonwebtoken";
-import { Prisma, UserRole, UserStatus } from "@prisma/client";
-import { prisma } from "../../shared/prisma";
+import {Prisma, UserRole, UserStatus} from "@prisma/client";
+import {prisma} from "../../shared/prisma";
 
 const createTourist = async (payload: createTouristPayload) => {
   const hashPass = await bcryptjs.hash(payload.password, Number(config.BCRYPT_SALT_ROUND));
@@ -91,7 +90,8 @@ const updateProfile = async (token: JwtPayload, payload: any, file: Express.Mult
   let profileInfo;
 
   if (userInfo.role === UserRole.ADMIN) {
-    profileInfo = await prisma.admin.update({where: {email: userInfo.email}, data: payload});
+    const {languages, ...data} = payload;
+    profileInfo = await prisma.admin.update({where: {email: userInfo.email}, data: data});
   } else if (userInfo.role === UserRole.GUIDE) {
     const guideProfile = await prisma.guide.findUniqueOrThrow({where: {email: userInfo.email}});
 

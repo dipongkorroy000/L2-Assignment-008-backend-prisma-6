@@ -66,7 +66,8 @@ const updateProfile = async (token, payload, file) => {
     }
     let profileInfo;
     if (userInfo.role === client_1.UserRole.ADMIN) {
-        profileInfo = await prisma_1.prisma.admin.update({ where: { email: userInfo.email }, data: payload });
+        const { languages, ...data } = payload;
+        profileInfo = await prisma_1.prisma.admin.update({ where: { email: userInfo.email }, data: data });
     }
     else if (userInfo.role === client_1.UserRole.GUIDE) {
         const guideProfile = await prisma_1.prisma.guide.findUniqueOrThrow({ where: { email: userInfo.email } });
