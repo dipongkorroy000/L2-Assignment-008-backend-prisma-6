@@ -3,6 +3,12 @@
 A **Node.js + TypeScript** backend server designed for Local Guide applications.  
 This project leverages **Express.js**, **Prisma ORM**, and modern tooling to provide a scalable, secure, and maintainable backend infrastructure.
 
+
+---
+## 🌐 Live Endpoint
+
+👉 [View the application here](https://l2-assignment-008-backend-prisma-6-2.onrender.com)
+
 ---
 
 ## 🚀 Features
