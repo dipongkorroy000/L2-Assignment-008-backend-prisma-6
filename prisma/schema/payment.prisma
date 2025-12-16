@@ -8,6 +8,7 @@ model Payment {
     updatedAt          DateTime      @updatedAt
     requestFormId      Int           @unique
     requestForm        RequestForm   @relation(fields: [requestFormId], references: [id])
+    stripeEventId      String?       @unique // For webhook idempotency
 
     @@map("payments")
 }
@@ -26,12 +27,13 @@ model RequestForm {
     createdAt DateTime          @default(now())
     updatedAt DateTime          @updatedAt
     payments  Payment?
-    review Review?
+    review    Review?
+
     @@map("requestForm")
 }
 
 model Review {
-    id Int @id @default(autoincrement())
+    id              Int         @id @default(autoincrement())
     rating          Float
     comment         String?
     requestedFormId Int         @unique

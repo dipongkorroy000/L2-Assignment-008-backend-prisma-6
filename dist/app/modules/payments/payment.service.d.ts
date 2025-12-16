@@ -19,6 +19,7 @@ export declare const PaymentService: {
         requestFormId: number;
         paymentGatewayData: import("@prisma/client/runtime/library").JsonValue | null;
         transactionId: string;
+        stripeEventId: string | null;
     } | null>;
 };
 //# sourceMappingURL=payment.service.d.ts.map

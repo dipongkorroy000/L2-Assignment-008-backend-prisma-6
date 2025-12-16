@@ -10,6 +10,11 @@ const handleStripeWebhookEvent = catchAsync(async (req: Request, res: Response) 
   const sig = req.headers["stripe-signature"] as string;
   const webhookSecret = config.STRIPE.STRIPE_WEBHOOK_SECRET; // call localy secret-> stript
 
+  if (!webhookSecret) {
+    console.error("⚠️ Stripe webhook secret not configured");
+    return res.status(500).send("Webhook secret not configured");
+  }
+
   let event;
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
@@ -21,7 +26,7 @@ const handleStripeWebhookEvent = catchAsync(async (req: Request, res: Response) 
 
   const result = await StripeService.handleStripeWebhookEvent(event);
 
-   res.status(200).send("Webhook received");
+  res.status(200).send("Webhook received");
 });
 
 export const StripeController = {handleStripeWebhookEvent};
