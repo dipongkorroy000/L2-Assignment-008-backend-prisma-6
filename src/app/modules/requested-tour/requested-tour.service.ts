@@ -264,7 +264,7 @@ const completedRequestedTours = async (email: string) => {
 
   if (user.role === UserRole.ADMIN) {
     return await prisma.requestForm.findMany({
-      where: {guide: {email}, status: RequestFormStatus.COMPLETED, payments: {status: PaymentStatus.PAID}},
+      where: {status: RequestFormStatus.COMPLETED, payments: {status: PaymentStatus.PAID}},
       select: {
         id: true,
         tour: {select: {title: true}},
