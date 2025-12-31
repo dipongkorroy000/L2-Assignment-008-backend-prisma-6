@@ -1,8 +1,8 @@
-import {PaymentStatus} from "@prisma/client";
+import {PaymentStatus, RequestFormStatus} from "@prisma/client";
 import {prisma} from "../../shared/prisma";
 
 const adminStats = async (email: string) => {
-  const user = await prisma.user.findUniqueOrThrow({where: {email}});
+  await prisma.user.findUniqueOrThrow({where: {email}});
 
   const admins = await prisma.admin.count();
   const tourists = await prisma.tourist.count();
@@ -41,4 +41,14 @@ const guideStats = async (email: string) => {
   };
 };
 
-export const statsService = {adminStats, guideStats};
+const toursStatsForChart = async () => {
+  const completedTours = await prisma.requestForm.count({where: {status: RequestFormStatus.COMPLETED}});
+  const totalTours = await prisma.tour.count();
+
+  const totalGuides = await prisma.guide.count();
+  const totalTourists = await prisma.tourist.count();
+
+  return {totalTours, completedTours, totalGuides, totalTourists};
+};
+
+export const statsService = {adminStats, guideStats, toursStatsForChart};

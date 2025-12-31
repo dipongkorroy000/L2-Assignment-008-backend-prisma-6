@@ -4,7 +4,7 @@ exports.statsService = void 0;
 const client_1 = require("@prisma/client");
 const prisma_1 = require("../../shared/prisma");
 const adminStats = async (email) => {
-    const user = await prisma_1.prisma.user.findUniqueOrThrow({ where: { email } });
+    await prisma_1.prisma.user.findUniqueOrThrow({ where: { email } });
     const admins = await prisma_1.prisma.admin.count();
     const tourists = await prisma_1.prisma.tourist.count();
     const guides = await prisma_1.prisma.guide.count();
@@ -34,5 +34,12 @@ const guideStats = async (email) => {
         },
     };
 };
-exports.statsService = { adminStats, guideStats };
+const toursStatsForChart = async () => {
+    const completedTours = await prisma_1.prisma.requestForm.count({ where: { status: client_1.RequestFormStatus.COMPLETED } });
+    const totalTours = await prisma_1.prisma.tour.count();
+    const totalGuides = await prisma_1.prisma.guide.count();
+    const totalTourists = await prisma_1.prisma.tourist.count();
+    return { totalTours, completedTours, totalGuides, totalTourists };
+};
+exports.statsService = { adminStats, guideStats, toursStatsForChart };
 //# sourceMappingURL=stats.service.js.map

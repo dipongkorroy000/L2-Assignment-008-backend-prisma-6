@@ -1,1 +1,1 @@
-{"version":3,"file":"stats.service.d.ts","sourceRoot":"","sources":["../../../../src/app/modules/stats/stats.service.ts"],"names":[],"mappings":"AA2CA,eAAO,MAAM,YAAY;wBAxCQ,MAAM;;;;;;;;;;wBAcN,MAAM;;;;;;CA0Ba,CAAC"}
+{"version":3,"file":"stats.service.d.ts","sourceRoot":"","sources":["../../../../src/app/modules/stats/stats.service.ts"],"names":[],"mappings":"AAqDA,eAAO,MAAM,YAAY;wBAlDQ,MAAM;;;;;;;;;;wBAcN,MAAM;;;;;;;;;;;;CAoCiC,CAAC"}

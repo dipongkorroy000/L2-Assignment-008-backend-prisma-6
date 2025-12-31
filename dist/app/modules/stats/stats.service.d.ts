@@ -15,5 +15,11 @@ export declare const statsService: {
             totalEarning: number;
         };
     }>;
+    toursStatsForChart: () => Promise<{
+        totalTours: number;
+        completedTours: number;
+        totalGuides: number;
+        totalTourists: number;
+    }>;
 };
 //# sourceMappingURL=stats.service.d.ts.map

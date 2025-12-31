@@ -3,7 +3,7 @@ import catchAsync from "../../shared/catchAsync";
 import type {NextFunction, Request, Response} from "express";
 import sendResponse from "../../shared/sendResponse";
 import status from "http-status";
-import { statsService } from "./stats.service";
+import {statsService} from "./stats.service";
 
 const adminStats = catchAsync(async (req: Request & {token?: JwtPayload}, res: Response, next: NextFunction) => {
   const {email} = req.token as JwtPayload;
@@ -27,4 +27,13 @@ const guideStats = catchAsync(async (req: Request & {token?: JwtPayload}, res: R
   }
 });
 
-export const statsController = {adminStats , guideStats};
+const toursStatsForChart = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await statsService.toursStatsForChart();
+    sendResponse(res, {status: status.OK, success: true, message: "Stats retrieved successfully", data: result});
+  } catch (error) {
+    next(error);
+  }
+});
+
+export const statsController = {adminStats, guideStats, toursStatsForChart};
