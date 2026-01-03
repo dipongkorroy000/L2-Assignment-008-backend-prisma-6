@@ -24,6 +24,7 @@ declare const _default: {
     FRONTEND_URL: string | undefined;
     PAYMENT_SUCCESS_URL: string;
     PAYMENT_CANCEL_URL: string;
+    open_router_api_KEY: string;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

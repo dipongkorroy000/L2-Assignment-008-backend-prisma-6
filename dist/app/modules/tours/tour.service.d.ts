@@ -58,6 +58,7 @@ export declare const tourService: {
             groupMembers: number;
             duration: string;
             image: string;
+            isActive: boolean;
         }[];
     }>;
     getTourById: (id: number) => Promise<{
@@ -196,5 +197,8 @@ export declare const tourService: {
         image: string;
         isActive: boolean;
     }>;
+    getAISuggestions: (payload: {
+        preferences: string;
+    }) => Promise<any>;
 };
 //# sourceMappingURL=tour.service.d.ts.map

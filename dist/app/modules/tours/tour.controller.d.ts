@@ -7,5 +7,6 @@ export declare const tourController: {
     updateTourByGuide: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     updateTourStatusByGuide: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     deleteTour: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    getAISuggestions: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 };
 //# sourceMappingURL=tour.controller.d.ts.map

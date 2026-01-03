@@ -8,6 +8,9 @@ const ServerError_1 = __importDefault(require("../../errors/ServerError"));
 const pagination_1 = require("../../middlewares/pagination");
 const prisma_1 = require("../../shared/prisma");
 const imageFileUploader_1 = require("../../utils/imageFileUploader");
+const http_status_1 = __importDefault(require("http-status"));
+const open_router_1 = require("../../utils/open-router");
+const aiJsonFromMessage_1 = require("../../utils/aiJsonFromMessage");
 const createTour = async (email, payload, file) => {
     const guide = await prisma_1.prisma.guide.findUniqueOrThrow({ where: { email } });
     if (file) {
@@ -56,6 +59,7 @@ const getAllTours = async (filters, options) => {
             duration: true,
             createdAt: true,
             guide: { select: { languages: true } },
+            isActive: true,
         },
         orderBy: sortOrder && sortBy ? { [sortBy]: sortOrder } : { createdAt: "desc" },
     });
@@ -161,5 +165,47 @@ const deleteTour = async (email, id) => {
     const userid = await prisma_1.prisma.guide.findUniqueOrThrow({ where: { email } });
     return await prisma_1.prisma.tour.delete({ where: { id, guideId: userid.id } });
 };
-exports.tourService = { createTour, getAllTours, getTourById, getToursByGuide, updateTourByGuide, updateTourStatusByGuide, deleteTour };
+const getAISuggestions = async (payload) => {
+    if (!(payload && payload.preferences)) {
+        throw new ServerError_1.default(http_status_1.default.BAD_REQUEST, "preferences is required!");
+    }
+    // Fetch active tours
+    const tours = await prisma_1.prisma.tour.findMany({
+        where: { isActive: true },
+        include: { guide: true, category: true },
+    });
+    const prompt = `
+  You are a travel assistant AI. Based on the user's preferences, suggest the top 3 most suitable tours. 
+  Each tour has details like title, description, fee, duration, meeting point, destination, city, category, 
+  and guide information (including name and profile). 
+  Only suggest tours that are relevant to the given preferences. 
+  Preferences: ${payload.preferences}
+  
+  Here is the tour list (in JSON):
+  ${JSON.stringify(tours, null, 2)}
+  
+  Return your response in JSON format with full individual tour data (id, title, description, fee, duration, destination, city, category, guide, averageRating).
+  `;
+    const completion = await open_router_1.openai.chat.completions.create({
+        model: "z-ai/glm-4.5-air:free",
+        messages: [
+            {
+                role: "system",
+                content: "You are a helpful AI travel assistant that provides tour suggestions.",
+            },
+            { role: "user", content: prompt },
+        ],
+    });
+    return (0, aiJsonFromMessage_1.aiJsonFromMessage)(completion.choices[0]?.message);
+};
+exports.tourService = {
+    createTour,
+    getAllTours,
+    getTourById,
+    getToursByGuide,
+    updateTourByGuide,
+    updateTourStatusByGuide,
+    deleteTour,
+    getAISuggestions,
+};
 //# sourceMappingURL=tour.service.js.map

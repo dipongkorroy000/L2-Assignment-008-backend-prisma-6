@@ -10,6 +10,7 @@ const auth_1 = __importDefault(require("../../middlewares/auth"));
 const imageFileUploader_1 = require("../../utils/imageFileUploader");
 const client_1 = require("@prisma/client");
 const router = express_1.default.Router();
+router.post("/ai-suggestions", tour_controller_1.tourController.getAISuggestions);
 router.post("/:email", imageFileUploader_1.imageFileUploader.upload.single("file"), (req, res, next) => {
     req.body = JSON.parse(req.body.data);
     return tour_controller_1.tourController.createTour(req, res, next);

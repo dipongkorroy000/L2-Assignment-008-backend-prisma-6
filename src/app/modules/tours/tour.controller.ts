@@ -6,7 +6,6 @@ import sendResponse from "../../shared/sendResponse";
 import status from "http-status";
 import formateObject from "../../middlewares/formateObject";
 
-
 const createTour = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await tourService.createTour(req.params.email as string, req.body, req.file);
@@ -55,7 +54,7 @@ const getToursByGuide = catchAsync(async (req: Request & {token?: JwtPayload}, r
 });
 
 const updateTourByGuide = catchAsync(async (req: Request & {token?: JwtPayload}, res: Response) => {
-   const {email} = req.token as JwtPayload;
+  const {email} = req.token as JwtPayload;
   try {
     const result = await tourService.updateTourByGuide(email, Number(req.params.id), req.body);
 
@@ -66,7 +65,7 @@ const updateTourByGuide = catchAsync(async (req: Request & {token?: JwtPayload},
 });
 
 const updateTourStatusByGuide = catchAsync(async (req: Request & {token?: JwtPayload}, res: Response) => {
-   const {email} = req.token as JwtPayload;
+  const {email} = req.token as JwtPayload;
   try {
     const result = await tourService.updateTourStatusByGuide(email, Number(req.params.id));
 
@@ -87,4 +86,23 @@ const deleteTour = catchAsync(async (req: Request & {token?: JwtPayload}, res: R
   }
 });
 
-export const tourController = {createTour, getAllTours, getTourById, getToursByGuide, updateTourByGuide, updateTourStatusByGuide, deleteTour};
+const getAISuggestions = catchAsync(async (req: Request, res: Response) => {
+  try {
+    const result = await tourService.getAISuggestions(req.body);
+
+    sendResponse(res, {status: status.OK, success: true, message: "AI Suggestions Retrieved Successfully", data: result});
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+export const tourController = {
+  createTour,
+  getAllTours,
+  getTourById,
+  getToursByGuide,
+  updateTourByGuide,
+  updateTourStatusByGuide,
+  deleteTour,
+  getAISuggestions,
+};

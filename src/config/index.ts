@@ -34,4 +34,6 @@ export default {
   FRONTEND_URL: process.env.FRONTEND_URL,
   PAYMENT_SUCCESS_URL: process.env.PAYMENT_SUCCESS_URL as string,
   PAYMENT_CANCEL_URL: process.env.PAYMENT_CANCEL_URL as string,
+
+  open_router_api_KEY: process.env.OPEN_ROUTER_API_KEY as string,
 };

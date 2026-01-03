@@ -80,5 +80,23 @@ const deleteTour = (0, catchAsync_1.default)(async (req, res) => {
         console.log(error);
     }
 });
-exports.tourController = { createTour, getAllTours, getTourById, getToursByGuide, updateTourByGuide, updateTourStatusByGuide, deleteTour };
+const getAISuggestions = (0, catchAsync_1.default)(async (req, res) => {
+    try {
+        const result = await tour_service_1.tourService.getAISuggestions(req.body);
+        (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "AI Suggestions Retrieved Successfully", data: result });
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.tourController = {
+    createTour,
+    getAllTours,
+    getTourById,
+    getToursByGuide,
+    updateTourByGuide,
+    updateTourStatusByGuide,
+    deleteTour,
+    getAISuggestions,
+};
 //# sourceMappingURL=tour.controller.js.map
