@@ -104,5 +104,85 @@ const getUser = async (id) => {
     else if (user.role === client_1.UserRole.TOURIST)
         return await prisma_1.prisma.tourist.findUniqueOrThrow({ where: { email: user.email } });
 };
-exports.userService = { createTourist, createGuide, createAdmin, getAllUsers, updateProfile, updateProfileStatus, getUser };
+const guidesLanguages = async () => {
+    const guidesForLanguages = await prisma_1.prisma.guide.findMany({ select: { languages: true } });
+    const allLanguages = guidesForLanguages.flatMap((guide) => guide.languages);
+    const uniqueLanguages = [...new Set(allLanguages)];
+    return uniqueLanguages;
+};
+const getGuides = async (filters, options) => {
+    const { searchTerm, categoryId, language, ...filterData } = filters;
+    const { page, limit, skip, sortBy, sortOrder } = (0, pagination_1.pagination)(options);
+    // Build dynamic conditions
+    const where = {};
+    // Search term across guide + tours
+    if (searchTerm) {
+        where.OR = [
+            { email: { contains: searchTerm, mode: "insensitive" } },
+            { name: { contains: searchTerm, mode: "insensitive" } },
+            {
+                tours: {
+                    some: {
+                        OR: [
+                            { title: { contains: searchTerm, mode: "insensitive" } },
+                            { meetingPoint: { contains: searchTerm, mode: "insensitive" } },
+                            { city: { contains: searchTerm, mode: "insensitive" } },
+                        ],
+                    },
+                },
+            },
+        ];
+    }
+    // Language filter
+    if (language) {
+        where.languages = {
+            has: language, // Prisma supports `has` for array fields
+        };
+    }
+    // Category filter (via tours)
+    if (categoryId) {
+        where.tours = {
+            some: {
+                categoryId: Number(categoryId),
+            },
+        };
+    }
+    // Extra filters (gender, etc.)
+    if (Object.keys(filterData).length > 0) {
+        where.AND = Object.keys(filterData).map((key) => ({
+            [key]: { equals: filterData[key] },
+        }));
+    }
+    // Query guides
+    const guides = await prisma_1.prisma.guide.findMany({
+        where: where,
+        select: {
+            email: true,
+            profilePhoto: true,
+            languages: true,
+            gender: true,
+            averageRating: true,
+            name: true,
+            tours: {
+                select: { title: true, destination: true, categoryId: true },
+            },
+        },
+        skip,
+        take: limit,
+        orderBy: sortOrder && sortBy ? { [sortBy]: sortOrder } : { createdAt: "desc" },
+    });
+    const total = await prisma_1.prisma.guide.count({ where });
+    return { meta: { page, limit, total }, data: guides };
+};
+exports.userService = {
+    createTourist,
+    createGuide,
+    createAdmin,
+    getAllUsers,
+    updateProfile,
+    updateProfileStatus,
+    getUser,
+    guidesLanguages,
+    getGuides,
+};
 //# sourceMappingURL=user.service.js.map

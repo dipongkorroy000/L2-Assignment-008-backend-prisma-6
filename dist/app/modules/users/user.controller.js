@@ -75,12 +75,41 @@ const updateProfileStatus = (0, catchAsync_1.default)(async (req, res, next) => 
 const getUser = (0, catchAsync_1.default)(async (req, res, next) => {
     try {
         const result = await user_service_1.userService.getUser(Number(req.params.id));
-        console.log(result);
         (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "User retrieved successfully", data: result });
     }
     catch (error) {
         next(error);
     }
 });
-exports.userController = { createTourist, createGuide, createAdmin, getAllUsers, updateProfile, updateProfileStatus, getUser };
+const guidesLanguages = (0, catchAsync_1.default)(async (req, res, next) => {
+    try {
+        const result = await user_service_1.userService.guidesLanguages();
+        (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "Guides languages retrieved successfully", data: result });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const getGuides = (0, catchAsync_1.default)(async (req, res, next) => {
+    const filters = (0, formateObject_1.default)(req.query, ["language", "categoryId", "searchTerm"]);
+    const options = (0, formateObject_1.default)(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+    try {
+        const result = await user_service_1.userService.getGuides(filters, options);
+        (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "Guides retrieved successfully", data: result });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.userController = {
+    createTourist,
+    createGuide,
+    createAdmin,
+    getAllUsers,
+    updateProfile,
+    updateProfileStatus,
+    getUser,
+    guidesLanguages,
+    getGuides,
+};
 //# sourceMappingURL=user.controller.js.map

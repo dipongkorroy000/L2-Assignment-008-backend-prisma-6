@@ -7,5 +7,7 @@ export declare const userController: {
     updateProfile: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     updateProfileStatus: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     getUser: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    guidesLanguages: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    getGuides: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 };
 //# sourceMappingURL=user.controller.d.ts.map

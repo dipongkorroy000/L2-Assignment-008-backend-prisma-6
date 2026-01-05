@@ -5,7 +5,6 @@ export declare const tourService: {
         createdAt: Date;
         updatedAt: Date;
         averageRating: number;
-        guideId: number;
         title: string;
         description: string;
         tourFee: number;
@@ -17,6 +16,7 @@ export declare const tourService: {
         city: string;
         image: string;
         isActive: boolean;
+        guideId: number;
     }>;
     getAllTours: (filters: any, options: IPagination) => Promise<{
         meta: {
@@ -148,7 +148,6 @@ export declare const tourService: {
         createdAt: Date;
         updatedAt: Date;
         averageRating: number;
-        guideId: number;
         title: string;
         description: string;
         tourFee: number;
@@ -160,13 +159,13 @@ export declare const tourService: {
         city: string;
         image: string;
         isActive: boolean;
+        guideId: number;
     }>;
     updateTourStatusByGuide: (email: string, id: number) => Promise<{
         id: number;
         createdAt: Date;
         updatedAt: Date;
         averageRating: number;
-        guideId: number;
         title: string;
         description: string;
         tourFee: number;
@@ -178,13 +177,13 @@ export declare const tourService: {
         city: string;
         image: string;
         isActive: boolean;
+        guideId: number;
     }>;
     deleteTour: (email: string, id: number) => Promise<{
         id: number;
         createdAt: Date;
         updatedAt: Date;
         averageRating: number;
-        guideId: number;
         title: string;
         description: string;
         tourFee: number;
@@ -196,6 +195,7 @@ export declare const tourService: {
         city: string;
         image: string;
         isActive: boolean;
+        guideId: number;
     }>;
     getAISuggestions: (payload: {
         preferences: string;

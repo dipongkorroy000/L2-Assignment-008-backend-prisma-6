@@ -86,5 +86,26 @@ export declare const userService: {
         address: string | null;
         gender: string | null;
     } | undefined>;
+    guidesLanguages: () => Promise<string[]>;
+    getGuides: (filters: any, options: IPagination) => Promise<{
+        meta: {
+            page: number;
+            limit: number;
+            total: number;
+        };
+        data: {
+            email: string;
+            name: string;
+            profilePhoto: string | null;
+            gender: string | null;
+            averageRating: number;
+            languages: string[];
+            tours: {
+                title: string;
+                categoryId: number;
+                destination: string;
+            }[];
+        }[];
+    }>;
 };
 //# sourceMappingURL=user.service.d.ts.map

@@ -78,11 +78,44 @@ const updateProfileStatus = catchAsync(async (req: Request, res: Response, next:
 const getUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await userService.getUser(Number(req.params.id));
-    console.log(result);
+
     sendResponse(res, {status: status.OK, success: true, message: "User retrieved successfully", data: result});
   } catch (error) {
     next(error);
   }
 });
 
-export const userController = {createTourist, createGuide, createAdmin, getAllUsers, updateProfile, updateProfileStatus, getUser};
+const guidesLanguages = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await userService.guidesLanguages();
+
+    sendResponse(res, {status: status.OK, success: true, message: "Guides languages retrieved successfully", data: result});
+  } catch (error) {
+    next(error);
+  }
+});
+
+const getGuides = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const filters = formateObject(req.query, ["language", "categoryId", "searchTerm"]);
+  const options = formateObject(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+
+  try {
+    const result = await userService.getGuides(filters, options);
+
+    sendResponse(res, {status: status.OK, success: true, message: "Guides retrieved successfully", data: result});
+  } catch (error) {
+    next(error);
+  }
+});
+
+export const userController = {
+  createTourist,
+  createGuide,
+  createAdmin,
+  getAllUsers,
+  updateProfile,
+  updateProfileStatus,
+  getUser,
+  guidesLanguages,
+  getGuides,
+};

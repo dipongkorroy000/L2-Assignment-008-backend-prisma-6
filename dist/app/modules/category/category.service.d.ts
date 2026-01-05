@@ -17,7 +17,6 @@ export declare const categoryService: {
             createdAt: Date;
             updatedAt: Date;
             averageRating: number;
-            guideId: number;
             title: string;
             description: string;
             tourFee: number;
@@ -29,6 +28,7 @@ export declare const categoryService: {
             city: string;
             image: string;
             isActive: boolean;
+            guideId: number;
         }[];
         title: string;
     }[]>;

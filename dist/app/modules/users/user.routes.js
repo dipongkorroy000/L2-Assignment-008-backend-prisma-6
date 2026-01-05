@@ -11,6 +11,8 @@ const client_1 = require("@prisma/client");
 const user_controller_1 = require("./user.controller");
 const router = express_1.default.Router();
 router.get("/", (0, auth_1.default)(client_1.UserRole.ADMIN), user_controller_1.userController.getAllUsers);
+router.get("/guides-languages", user_controller_1.userController.guidesLanguages);
+router.get("/guides", user_controller_1.userController.getGuides);
 router.get("/:id", user_controller_1.userController.getUser);
 router.post("/create-tourist", user_controller_1.userController.createTourist);
 router.post("/create-guide", user_controller_1.userController.createGuide);

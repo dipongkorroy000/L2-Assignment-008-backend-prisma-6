@@ -8,6 +8,11 @@ import { userController } from "./user.controller";
 const router: Router = express.Router();
 
 router.get("/", auth(UserRole.ADMIN), userController.getAllUsers);
+
+router.get("/guides-languages", userController.guidesLanguages);
+
+router.get("/guides", userController.getGuides);
+
 router.get("/:id", userController.getUser);
 
 router.post("/create-tourist", userController.createTourist);
