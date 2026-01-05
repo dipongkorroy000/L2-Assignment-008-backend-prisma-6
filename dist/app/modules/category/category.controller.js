@@ -20,5 +20,9 @@ const getAllCategoryWithTours = (0, catchAsync_1.default)(async (req, res) => {
     const result = await category_service_1.categoryService.getAllCategoryWithTours();
     (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "Created category", data: result });
 });
-exports.categoryController = { createCategory, getAllCategory, getAllCategoryWithTours };
+const deleteCategory = (0, catchAsync_1.default)(async (req, res) => {
+    const result = await category_service_1.categoryService.deleteCategory(Number(req.params.id));
+    (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "Created category", data: result });
+});
+exports.categoryController = { createCategory, getAllCategory, getAllCategoryWithTours, deleteCategory };
 //# sourceMappingURL=category.controller.js.map

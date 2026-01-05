@@ -24,5 +24,9 @@ const getAllCategory = async () => {
 const getAllCategoryWithTours = async () => {
     return await prisma_1.prisma.category.findMany({ select: { title: true, id: true, tour: { where: { isActive: true } } } });
 };
-exports.categoryService = { createCategory, getAllCategory, getAllCategoryWithTours };
+const deleteCategory = async (id) => {
+    await prisma_1.prisma.category.delete({ where: { id } });
+    return null;
+};
+exports.categoryService = { createCategory, getAllCategory, getAllCategoryWithTours, deleteCategory };
 //# sourceMappingURL=category.service.js.map

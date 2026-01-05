@@ -32,5 +32,6 @@ export declare const categoryService: {
         }[];
         title: string;
     }[]>;
+    deleteCategory: (id: number) => Promise<null>;
 };
 //# sourceMappingURL=category.service.d.ts.map

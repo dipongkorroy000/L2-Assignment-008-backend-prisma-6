@@ -2,9 +2,7 @@ import type {Request, Response} from "express";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import status from "http-status";
-import {success} from "zod";
 import {categoryService} from "./category.service";
-import type {JwtPayload} from "jsonwebtoken";
 
 const createCategory = catchAsync(async (req: Request, res: Response) => {
   const result = await categoryService.createCategory(req.body);
@@ -24,4 +22,10 @@ const getAllCategoryWithTours = catchAsync(async (req: Request, res: Response) =
   sendResponse(res, {status: status.OK, success: true, message: "Created category", data: result});
 });
 
-export const categoryController = {createCategory, getAllCategory, getAllCategoryWithTours};
+const deleteCategory = catchAsync(async (req: Request, res: Response) => {
+  const result = await categoryService.deleteCategory(Number(req.params.id));
+
+  sendResponse(res, {status: status.OK, success: true, message: "Created category", data: result});
+});
+
+export const categoryController = {createCategory, getAllCategory, getAllCategoryWithTours, deleteCategory};
