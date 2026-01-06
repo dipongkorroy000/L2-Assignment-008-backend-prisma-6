@@ -60,6 +60,7 @@ const getAllTours = async (filters, options) => {
             createdAt: true,
             guide: { select: { languages: true } },
             isActive: true,
+            destination: true,
         },
         orderBy: sortOrder && sortBy ? { [sortBy]: sortOrder } : { createdAt: "desc" },
     });

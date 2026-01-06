@@ -57,6 +57,7 @@ export declare const tourService: {
             title: string;
             groupMembers: number;
             duration: string;
+            destination: string;
             image: string;
             isActive: boolean;
         }[];

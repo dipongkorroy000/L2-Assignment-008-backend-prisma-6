@@ -67,6 +67,7 @@ const getAllTours = async (filters: any, options: IPagination) => {
       createdAt: true,
       guide: {select: {languages: true}},
       isActive: true,
+      destination: true,
     },
     orderBy: sortOrder && sortBy ? {[sortBy]: sortOrder} : {createdAt: "desc"},
   });
