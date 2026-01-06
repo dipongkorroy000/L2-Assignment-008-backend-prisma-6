@@ -132,7 +132,7 @@ const getToursByGuide = async (filters, options, email) => {
         },
         orderBy: sortOrder && sortBy ? { [sortBy]: sortOrder } : { createdAt: "desc" },
     });
-    const total = await prisma_1.prisma.tour.count({ where: { AND: andConditions } });
+    const total = await prisma_1.prisma.tour.count({ where: { AND: andConditions, guideId: guide.id } });
     return { meta: { page, limit, total }, data: result };
 };
 const updateTourByGuide = async (email, id, payload) => {
