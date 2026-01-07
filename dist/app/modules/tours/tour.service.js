@@ -13,6 +13,8 @@ const open_router_1 = require("../../utils/open-router");
 const aiJsonFromMessage_1 = require("../../utils/aiJsonFromMessage");
 const createTour = async (email, payload, file) => {
     const guide = await prisma_1.prisma.guide.findUniqueOrThrow({ where: { email } });
+    if (!file)
+        throw new ServerError_1.default(400, "Image not provide");
     if (file) {
         if (file.size > 400 * 1024) {
             throw new ServerError_1.default(400, "Image file size must be below 400KB");

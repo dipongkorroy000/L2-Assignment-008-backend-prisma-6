@@ -10,6 +10,8 @@ import {aiJsonFromMessage} from "../../utils/aiJsonFromMessage";
 const createTour = async (email: string, payload: any, file: Express.Multer.File | undefined) => {
   const guide = await prisma.guide.findUniqueOrThrow({where: {email}});
 
+  if(!file) throw new ServerError(400, "Image not provide");
+
   if (file) {
     if (file.size > 400 * 1024) {
       throw new ServerError(400, "Image file size must be below 400KB");
