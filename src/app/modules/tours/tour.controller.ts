@@ -18,7 +18,7 @@ const createTour = catchAsync(async (req: Request, res: Response, next: NextFunc
 });
 
 const getAllTours = catchAsync(async (req: Request, res: Response) => {
-  const filters = formateObject(req.query, ["city", "duration", "categoryId", "searchTerm"]);
+  const filters = formateObject(req.query, ["city", "duration", "categoryId", "searchTerm","price"]);
   const options = formateObject(req.query, ["page", "limit", "sortBy", "sortOrder"]);
 
   try {

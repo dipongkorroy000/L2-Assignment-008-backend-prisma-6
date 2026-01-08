@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { type IPagination } from "../../middlewares/pagination";
 export declare const tourService: {
     createTour: (email: string, payload: any, file: Express.Multer.File | undefined) => Promise<{
@@ -23,6 +24,14 @@ export declare const tourService: {
             page: number;
             limit: number;
             total: number;
+            tourFee: Prisma.GetTourAggregateType<{
+                _min: {
+                    tourFee: true;
+                };
+                _max: {
+                    tourFee: true;
+                };
+            }>;
         };
         data: {
             id: number;
@@ -55,6 +64,7 @@ export declare const tourService: {
                 title: string;
             };
             title: string;
+            tourFee: number;
             groupMembers: number;
             duration: string;
             destination: string;

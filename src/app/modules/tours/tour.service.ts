@@ -10,7 +10,7 @@ import {aiJsonFromMessage} from "../../utils/aiJsonFromMessage";
 const createTour = async (email: string, payload: any, file: Express.Multer.File | undefined) => {
   const guide = await prisma.guide.findUniqueOrThrow({where: {email}});
 
-  if(!file) throw new ServerError(400, "Image not provide");
+  if (!file) throw new ServerError(400, "Image not provide");
 
   if (file) {
     if (file.size > 400 * 1024) {
@@ -27,42 +27,59 @@ const createTour = async (email: string, payload: any, file: Express.Multer.File
 };
 
 const getAllTours = async (filters: any, options: IPagination) => {
-  const {searchTerm, categoryId, ...filterData} = filters;
+  const {searchTerm, categoryId, price, ...filterData} = filters;
   const {page, limit, skip, sortBy, sortOrder} = pagination(options);
 
   const andConditions: Prisma.TourWhereInput[] = [];
 
+  // 🔍 Search term filter
   if (searchTerm) {
-    andConditions.push({OR: ["title", "description"].map((field) => ({[field]: {contains: searchTerm, mode: "insensitive"}}))});
+    andConditions.push({
+      OR: ["title", "description"].map((field) => ({
+        [field]: {contains: searchTerm, mode: "insensitive"},
+      })),
+    });
   }
 
+  // 📂 Category filter
   if (categoryId) {
-    // Convert to array if single string
-    const specialtiesArray = Array.isArray(categoryId) ? categoryId : [categoryId];
+    andConditions.push({categoryId: Number(categoryId)});
+  }
 
+  // 📝 Extra filters
+  if (Object.keys(filterData).length > 0) {
     andConditions.push({
-      categoryId: Number(categoryId),
+      AND: Object.keys(filterData).map((key) => ({
+        [key]: {equals: (filterData as any)[key]},
+      })),
     });
   }
 
-  if (Object.keys(filterData.length > 0)) {
-    andConditions.push({
-      AND: Object.keys(filterData).map((key) => ({[key]: {equals: (filterData as any)[key]}})),
-    });
+  // 💰 Price range filter
+  if (price) {
+    const [minFee, maxFee] = price.split(",").map(Number);
+    if (!isNaN(minFee) && !isNaN(maxFee)) {
+      andConditions.push({tourFee: {gte: minFee, lte: maxFee}});
+    }
   }
 
   const whereConditions: Prisma.TourWhereInput = andConditions.length > 0 ? {AND: andConditions} : {};
 
   const result = await prisma.tour.findMany({
-    skip: skip,
+    skip,
     take: limit,
-    where: {AND: whereConditions, isActive: true},
+    where: {...whereConditions, isActive: true},
     select: {
       id: true,
       title: true,
       averageRating: true,
       groupMembers: true,
-      requestForm: {include: {review: {select: {comment: true, rating: true}}, tourist: {select: {email: true}}}},
+      requestForm: {
+        include: {
+          review: {select: {comment: true, rating: true}},
+          tourist: {select: {email: true}},
+        },
+      },
       image: true,
       category: true,
       duration: true,
@@ -70,13 +87,21 @@ const getAllTours = async (filters: any, options: IPagination) => {
       guide: {select: {languages: true}},
       isActive: true,
       destination: true,
+      tourFee: true,
     },
     orderBy: sortOrder && sortBy ? {[sortBy]: sortOrder} : {createdAt: "desc"},
   });
 
-  const total = await prisma.tour.count({where: {AND: andConditions}});
+  const total = await prisma.tour.count({
+    where: {...whereConditions, isActive: true},
+  });
 
-  return {meta: {page, limit, total}, data: result};
+  const tourFee = await prisma.tour.aggregate({
+    _min: {tourFee: true},
+    _max: {tourFee: true},
+  });
+
+  return {meta: {page, limit, total, tourFee}, data: result};
 };
 
 const getTourById = async (id: number) => {

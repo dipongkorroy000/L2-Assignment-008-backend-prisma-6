@@ -20,7 +20,7 @@ const createTour = (0, catchAsync_1.default)(async (req, res, next) => {
     }
 });
 const getAllTours = (0, catchAsync_1.default)(async (req, res) => {
-    const filters = (0, formateObject_1.default)(req.query, ["city", "duration", "categoryId", "searchTerm"]);
+    const filters = (0, formateObject_1.default)(req.query, ["city", "duration", "categoryId", "searchTerm", "price"]);
     const options = (0, formateObject_1.default)(req.query, ["page", "limit", "sortBy", "sortOrder"]);
     try {
         const result = await tour_service_1.tourService.getAllTours(filters, options);
