@@ -34,6 +34,7 @@ export declare const tourService: {
             }>;
         };
         data: {
+            totalRequestForm: number;
             id: number;
             createdAt: Date;
             guide: {
@@ -59,6 +60,9 @@ export declare const tourService: {
                 tourDate: Date;
                 comment: string;
             })[];
+            _count: {
+                requestForm: number;
+            };
             category: {
                 id: number;
                 title: string;
@@ -68,6 +72,7 @@ export declare const tourService: {
             groupMembers: number;
             duration: string;
             destination: string;
+            city: string;
             image: string;
             isActive: boolean;
         }[];

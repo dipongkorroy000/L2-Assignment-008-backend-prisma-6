@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.tourService = void 0;
+const client_1 = require("@prisma/client");
 const ServerError_1 = __importDefault(require("../../errors/ServerError"));
 const pagination_1 = require("../../middlewares/pagination");
 const prisma_1 = require("../../shared/prisma");
@@ -80,7 +81,9 @@ const getAllTours = async (filters, options) => {
             guide: { select: { languages: true } },
             isActive: true,
             destination: true,
+            city: true,
             tourFee: true,
+            _count: { select: { requestForm: true } },
         },
         orderBy: sortOrder && sortBy ? { [sortBy]: sortOrder } : { createdAt: "desc" },
     });
@@ -91,7 +94,10 @@ const getAllTours = async (filters, options) => {
         _min: { tourFee: true },
         _max: { tourFee: true },
     });
-    return { meta: { page, limit, total, tourFee }, data: result };
+    return {
+        meta: { page, limit, total, tourFee },
+        data: result.map((tour) => ({ ...tour, totalRequestForm: tour._count.requestForm })),
+    };
 };
 const getTourById = async (id) => {
     const tour = await prisma_1.prisma.tour.findUnique({
@@ -182,11 +188,14 @@ const updateTourStatusByGuide = async (email, id) => {
     const tour = await prisma_1.prisma.tour.findUnique({ where: { id } });
     if (!tour)
         throw new Error("Tour not found");
+    const admin = await prisma_1.prisma.user.findUnique({ where: { email } });
+    if (admin?.role === client_1.UserRole.ADMIN) {
+        return await prisma_1.prisma.tour.update({ where: { id }, data: { isActive: !tour.isActive } });
+    }
     if (tour.guideId !== (await prisma_1.prisma.guide.findUnique({ where: { email } }))?.id) {
         throw new Error("Unauthorized");
     }
-    const updatedTour = await prisma_1.prisma.tour.update({ where: { id }, data: { isActive: !tour.isActive } });
-    return updatedTour;
+    return await prisma_1.prisma.tour.update({ where: { id }, data: { isActive: !tour.isActive } });
 };
 const deleteTour = async (email, id) => {
     const userid = await prisma_1.prisma.guide.findUniqueOrThrow({ where: { email } });

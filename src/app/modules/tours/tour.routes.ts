@@ -3,7 +3,7 @@ import {tourController} from "./tour.controller";
 import auth from "../../middlewares/auth";
 
 import {imageFileUploader} from "../../utils/imageFileUploader";
-import { UserRole } from "@prisma/client";
+import {UserRole} from "@prisma/client";
 
 const router: Router = express.Router();
 
@@ -22,9 +22,8 @@ router.get("/:id", tourController.getTourById);
 
 router.put("/:id", auth(UserRole.GUIDE), tourController.updateTourByGuide);
 
-router.put("/:id/status", auth(UserRole.GUIDE), tourController.updateTourStatusByGuide);
+router.put("/:id/status", auth(UserRole.GUIDE, UserRole.ADMIN), tourController.updateTourStatusByGuide);
 
 router.delete("/:id", auth(UserRole.GUIDE, UserRole.ADMIN), tourController.deleteTour);
-
 
 export const tourRoutes = router;

@@ -1,4 +1,4 @@
-import {Prisma} from "@prisma/client";
+import {Prisma, UserRole} from "@prisma/client";
 import ServerError from "../../errors/ServerError";
 import {pagination, type IPagination} from "../../middlewares/pagination";
 import {prisma} from "../../shared/prisma";
@@ -87,7 +87,9 @@ const getAllTours = async (filters: any, options: IPagination) => {
       guide: {select: {languages: true}},
       isActive: true,
       destination: true,
+      city: true,
       tourFee: true,
+      _count: {select: {requestForm: true}},
     },
     orderBy: sortOrder && sortBy ? {[sortBy]: sortOrder} : {createdAt: "desc"},
   });
@@ -101,7 +103,10 @@ const getAllTours = async (filters: any, options: IPagination) => {
     _max: {tourFee: true},
   });
 
-  return {meta: {page, limit, total, tourFee}, data: result};
+  return {
+    meta: {page, limit, total, tourFee},
+    data: result.map((tour) => ({...tour, totalRequestForm: tour._count.requestForm})),
+  };
 };
 
 const getTourById = async (id: number) => {
@@ -219,12 +224,16 @@ const updateTourStatusByGuide = async (email: string, id: number) => {
   const tour = await prisma.tour.findUnique({where: {id}});
   if (!tour) throw new Error("Tour not found");
 
+  const admin = await prisma.user.findUnique({where: {email}});
+  if (admin?.role === UserRole.ADMIN) {
+    return await prisma.tour.update({where: {id}, data: {isActive: !tour.isActive}});
+  }
+
   if (tour.guideId !== (await prisma.guide.findUnique({where: {email}}))?.id) {
     throw new Error("Unauthorized");
   }
 
-  const updatedTour = await prisma.tour.update({where: {id}, data: {isActive: !tour.isActive}});
-  return updatedTour;
+  return await prisma.tour.update({where: {id}, data: {isActive: !tour.isActive}});
 };
 
 const deleteTour = async (email: string, id: number) => {

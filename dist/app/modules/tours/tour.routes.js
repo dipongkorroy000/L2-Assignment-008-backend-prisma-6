@@ -19,7 +19,7 @@ router.get("/", tour_controller_1.tourController.getAllTours);
 router.get("/guide", (0, auth_1.default)(client_1.UserRole.GUIDE), tour_controller_1.tourController.getToursByGuide);
 router.get("/:id", tour_controller_1.tourController.getTourById);
 router.put("/:id", (0, auth_1.default)(client_1.UserRole.GUIDE), tour_controller_1.tourController.updateTourByGuide);
-router.put("/:id/status", (0, auth_1.default)(client_1.UserRole.GUIDE), tour_controller_1.tourController.updateTourStatusByGuide);
+router.put("/:id/status", (0, auth_1.default)(client_1.UserRole.GUIDE, client_1.UserRole.ADMIN), tour_controller_1.tourController.updateTourStatusByGuide);
 router.delete("/:id", (0, auth_1.default)(client_1.UserRole.GUIDE, client_1.UserRole.ADMIN), tour_controller_1.tourController.deleteTour);
 exports.tourRoutes = router;
 //# sourceMappingURL=tour.routes.js.map
