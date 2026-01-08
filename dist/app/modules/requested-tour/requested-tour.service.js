@@ -23,7 +23,7 @@ const requestTour = async (email, payload) => {
         const last = new Date(lastRequest.createdAt).getTime();
         const diffInDays = (now - last) / (1000 * 60 * 60 * 24);
         if (diffInDays < 2) {
-            throw new ServerError_1.default(400, "You have already requested this tour with the same guide within the last 2 days.");
+            throw new ServerError_1.default(400, "You have already requested this tour");
         }
     }
     // create new request
