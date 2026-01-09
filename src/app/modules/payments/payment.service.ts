@@ -19,7 +19,7 @@ const paymentInit = async (tourFormId: number) => {
       where: {requestFormId: tourFormId},
     });
 
-    if (payment?.status === PaymentStatus.PAID) throw new ServerError(400, "Already payment"); 
+    if (payment?.status === PaymentStatus.PAID) throw new ServerError(400, "Already payment");
 
     if (!payment) {
       payment = await tnx.payment.create({data: {amount: requestForm.tour.tourFee, requestFormId: requestForm.id}});
@@ -69,7 +69,7 @@ const getPayments = async (email: string) => {
     const tourist = await prisma.tourist.findUniqueOrThrow({where: {email}});
 
     return await prisma.requestForm.findMany({
-      where: {tourId: tourist.id},
+      where: {tourist: {id: tourist.id}},
       select: {
         payments: {select: {amount: true, updatedAt: true, status: true, transactionId: true}},
       },

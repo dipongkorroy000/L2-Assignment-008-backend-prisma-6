@@ -65,7 +65,7 @@ const getPayments = async (email) => {
     else if (user.role === client_1.UserRole.TOURIST) {
         const tourist = await prisma_1.prisma.tourist.findUniqueOrThrow({ where: { email } });
         return await prisma_1.prisma.requestForm.findMany({
-            where: { tourId: tourist.id },
+            where: { tourist: { id: tourist.id } },
             select: {
                 payments: { select: { amount: true, updatedAt: true, status: true, transactionId: true } },
             },
