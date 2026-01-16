@@ -13,6 +13,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const open_router_1 = require("../../utils/open-router");
 const aiJsonFromMessage_1 = require("../../utils/aiJsonFromMessage");
 const createTour = async (email, payload, file) => {
+    await prisma_1.prisma.user.findUniqueOrThrow({ where: { email, status: client_1.UserStatus.ACTIVE } });
     const guide = await prisma_1.prisma.guide.findUniqueOrThrow({ where: { email } });
     if (!file)
         throw new ServerError_1.default(400, "Image not provide");

@@ -12,9 +12,11 @@ const ServerError_1 = __importDefault(require("../../errors/ServerError"));
 const prisma_1 = require("../../shared/prisma");
 const client_1 = require("@prisma/client");
 const login = async (payload) => {
-    const user = await prisma_1.prisma.user.findUnique({ where: { email: payload.email, status: client_1.UserStatus.ACTIVE } });
+    const user = await prisma_1.prisma.user.findUnique({ where: { email: payload.email } });
     if (!user)
         throw new ServerError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+    if (user.status == client_1.UserStatus.BANNED)
+        throw new ServerError_1.default(http_status_1.default.FORBIDDEN, "Banned account");
     const isCorrectPass = await bcryptjs_1.default.compare(payload.password, user.password);
     if (!isCorrectPass)
         throw new ServerError_1.default(http_status_1.default.BAD_REQUEST, "Password is incorrect");
@@ -34,7 +36,7 @@ const login = async (payload) => {
 };
 const getProfile = async (email) => {
     const user = await prisma_1.prisma.user.findUniqueOrThrow({
-        where: { email: email, status: client_1.UserStatus.ACTIVE },
+        where: { email: email },
         select: {
             id: true,
             email: true,
@@ -84,6 +86,8 @@ const getProfile = async (email) => {
             },
         },
     });
+    if (user.status == client_1.UserStatus.BANNED)
+        throw new ServerError_1.default(http_status_1.default.FORBIDDEN, "User is banned");
     return user;
 };
 exports.authService = { login, getProfile };

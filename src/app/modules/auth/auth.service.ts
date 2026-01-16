@@ -8,9 +8,11 @@ import {prisma} from "../../shared/prisma";
 import {UserStatus} from "@prisma/client";
 
 const login = async (payload: Login) => {
-  const user = await prisma.user.findUnique({where: {email: payload.email, status: UserStatus.ACTIVE}});
+  const user = await prisma.user.findUnique({where: {email: payload.email}});
 
   if (!user) throw new ServerError(status.NOT_FOUND, "User not found");
+
+  if(user.status == UserStatus.BANNED) throw new ServerError(status.FORBIDDEN, "Banned account");
 
   const isCorrectPass = await bcryptjs.compare(payload.password, user.password);
 
@@ -35,7 +37,7 @@ const login = async (payload: Login) => {
 
 const getProfile = async (email: string) => {
   const user = await prisma.user.findUniqueOrThrow({
-    where: {email: email, status: UserStatus.ACTIVE},
+    where: {email: email},
     select: {
       id: true,
       email: true,
@@ -85,6 +87,8 @@ const getProfile = async (email: string) => {
       },
     },
   });
+
+  if(user.status == UserStatus.BANNED) throw new ServerError(status.FORBIDDEN, "User is banned");
 
   return user;
 };

@@ -1,4 +1,4 @@
-import {Prisma, UserRole} from "@prisma/client";
+import {Prisma, UserRole, UserStatus} from "@prisma/client";
 import ServerError from "../../errors/ServerError";
 import {pagination, type IPagination} from "../../middlewares/pagination";
 import {prisma} from "../../shared/prisma";
@@ -8,6 +8,8 @@ import {openai} from "../../utils/open-router";
 import {aiJsonFromMessage} from "../../utils/aiJsonFromMessage";
 
 const createTour = async (email: string, payload: any, file: Express.Multer.File | undefined) => {
+  await prisma.user.findUniqueOrThrow({where: {email, status: UserStatus.ACTIVE}});
+
   const guide = await prisma.guide.findUniqueOrThrow({where: {email}});
 
   if (!file) throw new ServerError(400, "Image not provide");

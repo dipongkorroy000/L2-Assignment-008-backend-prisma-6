@@ -8,6 +8,7 @@ const client_1 = require("@prisma/client");
 const ServerError_1 = __importDefault(require("../../errors/ServerError"));
 const prisma_1 = require("../../shared/prisma");
 const requestTour = async (email, payload) => {
+    await prisma_1.prisma.user.findUniqueOrThrow({ where: { email, status: client_1.UserStatus.ACTIVE } });
     const tourist = await prisma_1.prisma.tourist.findUniqueOrThrow({ where: { email } });
     // find last request for same tourId + guideId + touristId
     const lastRequest = await prisma_1.prisma.requestForm.findFirst({
@@ -27,12 +28,7 @@ const requestTour = async (email, payload) => {
         }
     }
     // create new request
-    return await prisma_1.prisma.requestForm.create({
-        data: {
-            ...payload,
-            touristId: tourist.id,
-        },
-    });
+    return await prisma_1.prisma.requestForm.create({ data: { ...payload, touristId: tourist.id } });
 };
 const getRequestedTourForm = async (email) => {
     const user = await prisma_1.prisma.user.findUniqueOrThrow({ where: { email } });
@@ -72,7 +68,7 @@ const getRequestedTourForm = async (email) => {
     }
 };
 const updateRequestedTourFormStatus = async (email, id, payload) => {
-    const user = await prisma_1.prisma.user.findUniqueOrThrow({ where: { email } });
+    const user = await prisma_1.prisma.user.findUniqueOrThrow({ where: { email, status: client_1.UserStatus.ACTIVE } });
     const requestedTourForm = await prisma_1.prisma.requestForm.findUniqueOrThrow({ where: { id } });
     if (user.role === client_1.UserRole.TOURIST) {
         // find tourist by requestedTourForm.touristId
@@ -174,7 +170,7 @@ const upcomingTours = async (email) => {
     throw new ServerError_1.default(400, "Invalid role");
 };
 const canceledRequestedTours = async (email) => {
-    const user = await prisma_1.prisma.user.findUniqueOrThrow({ where: { email } });
+    const user = await prisma_1.prisma.user.findUniqueOrThrow({ where: { email, status: client_1.UserStatus.ACTIVE } });
     if (user.role === client_1.UserRole.TOURIST) {
         return await prisma_1.prisma.requestForm.findMany({
             where: { tourist: { email }, status: client_1.RequestFormStatus.CANCELLED },
@@ -253,7 +249,8 @@ const completedRequestedTours = async (email) => {
     }
 };
 const completedToursReviewProvide = async (email) => {
-    const user = await prisma_1.prisma.tourist.findUniqueOrThrow({ where: { email } });
+    await prisma_1.prisma.user.findUniqueOrThrow({ where: { email, status: client_1.UserStatus.ACTIVE } });
+    await prisma_1.prisma.tourist.findUniqueOrThrow({ where: { email } });
     return await prisma_1.prisma.requestForm.findMany({
         where: {
             tourist: { email },

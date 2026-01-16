@@ -1,10 +1,11 @@
-
-import { PaymentStatus, RequestFormStatus, UserRole } from "@prisma/client";
+import {PaymentStatus, RequestFormStatus, UserRole, UserStatus} from "@prisma/client";
 import ServerError from "../../errors/ServerError";
-import { prisma } from "../../shared/prisma";
+import {prisma} from "../../shared/prisma";
 import type {IRequestTour} from "./requested-tour.interface";
 
 const requestTour = async (email: string, payload: IRequestTour) => {
+  await prisma.user.findUniqueOrThrow({where: {email, status: UserStatus.ACTIVE}});
+
   const tourist = await prisma.tourist.findUniqueOrThrow({where: {email}});
 
   // find last request for same tourId + guideId + touristId
@@ -28,12 +29,7 @@ const requestTour = async (email: string, payload: IRequestTour) => {
   }
 
   // create new request
-  return await prisma.requestForm.create({
-    data: {
-      ...payload,
-      touristId: tourist.id,
-    },
-  });
+  return await prisma.requestForm.create({data: {...payload, touristId: tourist.id}});
 };
 
 const getRequestedTourForm = async (email: string) => {
@@ -77,7 +73,7 @@ const getRequestedTourForm = async (email: string) => {
 };
 
 const updateRequestedTourFormStatus = async (email: string, id: number, payload: {status: RequestFormStatus}) => {
-  const user = await prisma.user.findUniqueOrThrow({where: {email}});
+  const user = await prisma.user.findUniqueOrThrow({where: {email, status: UserStatus.ACTIVE}});
 
   const requestedTourForm = await prisma.requestForm.findUniqueOrThrow({where: {id}});
 
@@ -194,7 +190,7 @@ const upcomingTours = async (email: string) => {
 };
 
 const canceledRequestedTours = async (email: string) => {
-  const user = await prisma.user.findUniqueOrThrow({where: {email}});
+  const user = await prisma.user.findUniqueOrThrow({where: {email, status: UserStatus.ACTIVE}});
 
   if (user.role === UserRole.TOURIST) {
     return await prisma.requestForm.findMany({
@@ -280,7 +276,9 @@ const completedRequestedTours = async (email: string) => {
 };
 
 const completedToursReviewProvide = async (email: string) => {
-  const user = await prisma.tourist.findUniqueOrThrow({where: {email}});
+  await prisma.user.findUniqueOrThrow({where: {email, status: UserStatus.ACTIVE}});
+  
+  await prisma.tourist.findUniqueOrThrow({where: {email}});
 
   return await prisma.requestForm.findMany({
     where: {
