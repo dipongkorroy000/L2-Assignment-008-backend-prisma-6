@@ -30,9 +30,14 @@ const getProfile = (0, catchAsync_1.default)(async (req, res) => {
     const result = await auth_service_1.authService.getProfile(email);
     (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "User retrieve successfully!", data: result });
 });
-const passwordUpdate = (0, catchAsync_1.default)(async (req, res) => {
-    const result = await auth_service_1.authService.passwordUpdate(req.token?.email, req.body);
-    (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "User retrieve successfully!", data: result });
+const passwordUpdate = (0, catchAsync_1.default)(async (req, res, next) => {
+    try {
+        const result = await auth_service_1.authService.passwordUpdate(req.token?.email, req.body);
+        (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "Update successfully!", data: result });
+    }
+    catch (error) {
+        next(error);
+    }
 });
 exports.authController = { login, getProfile, passwordUpdate };
 //# sourceMappingURL=auth.controller.js.map

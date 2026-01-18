@@ -95,14 +95,15 @@ const getProfile = async (email: string) => {
 
 const passwordUpdate = async (email: string, payload: PasswordPayload) => {
   const user = await prisma.user.findUniqueOrThrow({where: {email, status: UserStatus.ACTIVE}});
-
+  
   const isCorrectPass = await bcryptjs.compare(payload.oldPassword, user.password);
-
   if (!isCorrectPass) throw new ServerError(status.BAD_REQUEST, "Password is incorrect");
 
-  const res = await prisma.user.update({where: {email: user.email}, data: {password: payload.newPassword}});
+  const hashedPassword = await bcryptjs.hash(payload.newPassword, Number(config.BCRYPT_SALT_ROUND));
 
-  return res;
+  const result = await prisma.user.update({where: {email}, data: {password: hashedPassword}});
+
+  return result;
 };
 
 export const authService = {login, getProfile, passwordUpdate};

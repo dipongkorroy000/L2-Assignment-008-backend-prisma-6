@@ -95,8 +95,9 @@ const passwordUpdate = async (email, payload) => {
     const isCorrectPass = await bcryptjs_1.default.compare(payload.oldPassword, user.password);
     if (!isCorrectPass)
         throw new ServerError_1.default(http_status_1.default.BAD_REQUEST, "Password is incorrect");
-    const res = await prisma_1.prisma.user.update({ where: { email: user.email }, data: { password: payload.newPassword } });
-    return res;
+    const hashedPassword = await bcryptjs_1.default.hash(payload.newPassword, Number(config_1.default.BCRYPT_SALT_ROUND));
+    const result = await prisma_1.prisma.user.update({ where: { email }, data: { password: hashedPassword } });
+    return result;
 };
 exports.authService = { login, getProfile, passwordUpdate };
 //# sourceMappingURL=auth.service.js.map
