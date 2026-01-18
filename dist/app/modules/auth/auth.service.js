@@ -90,5 +90,13 @@ const getProfile = async (email) => {
         throw new ServerError_1.default(http_status_1.default.FORBIDDEN, "User is banned");
     return user;
 };
-exports.authService = { login, getProfile };
+const passwordUpdate = async (email, payload) => {
+    const user = await prisma_1.prisma.user.findUniqueOrThrow({ where: { email, status: client_1.UserStatus.ACTIVE } });
+    const isCorrectPass = await bcryptjs_1.default.compare(payload.oldPassword, user.password);
+    if (!isCorrectPass)
+        throw new ServerError_1.default(http_status_1.default.BAD_REQUEST, "Password is incorrect");
+    const res = await prisma_1.prisma.user.update({ where: { email: user.email }, data: { password: payload.newPassword } });
+    return res;
+};
+exports.authService = { login, getProfile, passwordUpdate };
 //# sourceMappingURL=auth.service.js.map

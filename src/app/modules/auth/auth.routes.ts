@@ -10,4 +10,6 @@ router.post("/login", authController.login);
 
 router.get("/profile", auth(UserRole.ADMIN, UserRole.GUIDE, UserRole.TOURIST), authController.getProfile);
 
+router.patch("/password-update", auth(UserRole.ADMIN, UserRole.GUIDE, UserRole.TOURIST), authController.passwordUpdate);
+
 export const authRoutes = router;

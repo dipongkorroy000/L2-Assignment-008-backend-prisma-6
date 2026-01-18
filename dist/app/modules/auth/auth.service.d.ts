@@ -1,4 +1,4 @@
-import type { Login } from "./auth.interface";
+import type { Login, PasswordPayload } from "./auth.interface";
 export declare const authService: {
     login: (payload: Login) => Promise<{
         accessToken: string;
@@ -45,6 +45,15 @@ export declare const authService: {
             gender: string | null;
             languages: string[];
         } | null;
+    }>;
+    passwordUpdate: (email: string, payload: PasswordPayload) => Promise<{
+        email: string;
+        role: import("@prisma/client").$Enums.UserRole;
+        id: number;
+        password: string;
+        status: import("@prisma/client").$Enums.UserStatus;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
 };
 //# sourceMappingURL=auth.service.d.ts.map

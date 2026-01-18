@@ -35,4 +35,10 @@ const getProfile = catchAsync(async (req: Request & {token?: JwtPayload}, res: R
   sendResponse(res, {status: status.OK, success: true, message: "User retrieve successfully!", data: result});
 });
 
-export const authController = {login, getProfile};
+const passwordUpdate = catchAsync(async (req: Request & {token?: JwtPayload}, res: Response) => {
+  const result = await authService.passwordUpdate(req.token?.email as string, req.body);
+
+  sendResponse(res, {status: status.OK, success: true, message: "User retrieve successfully!", data: result});
+});
+
+export const authController = {login, getProfile, passwordUpdate};

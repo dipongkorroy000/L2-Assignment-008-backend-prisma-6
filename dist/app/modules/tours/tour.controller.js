@@ -30,13 +30,14 @@ const getAllTours = (0, catchAsync_1.default)(async (req, res) => {
         console.log(error);
     }
 });
-const getTourById = (0, catchAsync_1.default)(async (req, res) => {
+const getTourById = (0, catchAsync_1.default)(async (req, res, next) => {
     try {
         const result = await tour_service_1.tourService.getTourById(Number(req.params.id));
         (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "Tour Retrieved Successfully", data: result });
     }
     catch (error) {
         console.log(error);
+        next(error);
     }
 });
 const getToursByGuide = (0, catchAsync_1.default)(async (req, res) => {

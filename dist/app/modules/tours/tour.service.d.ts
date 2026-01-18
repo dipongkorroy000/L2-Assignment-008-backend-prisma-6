@@ -120,7 +120,7 @@ export declare const tourService: {
         destination: string;
         city: string;
         image: string;
-    } | null>;
+    }>;
     getToursByGuide: (filters: any, options: IPagination, email: string) => Promise<{
         meta: {
             page: number;

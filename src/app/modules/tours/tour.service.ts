@@ -112,7 +112,7 @@ const getAllTours = async (filters: any, options: IPagination) => {
 };
 
 const getTourById = async (id: number) => {
-  const tour = await prisma.tour.findUnique({
+  const tour = await prisma.tour.findUniqueOrThrow({
     where: {id},
     select: {
       guide: {
