@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authService = void 0;
+exports.authService = exports.userProfileStatusUpdate = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = require("../../utils/jsonwebtoken");
@@ -99,5 +99,15 @@ const passwordUpdate = async (email, payload) => {
     const result = await prisma_1.prisma.user.update({ where: { email }, data: { password: hashedPassword } });
     return result;
 };
-exports.authService = { login, getProfile, passwordUpdate };
+const userProfileStatusUpdate = async (email) => {
+    const user = await prisma_1.prisma.user.findUniqueOrThrow({ where: { email } });
+    if (user.status === client_1.UserStatus.BANNED) {
+        throw new ServerError_1.default(http_status_1.default.FORBIDDEN, "Banned users cannot be updated");
+    }
+    const newStatus = user.status === client_1.UserStatus.ACTIVE ? client_1.UserStatus.INACTIVE : client_1.UserStatus.ACTIVE;
+    const result = await prisma_1.prisma.user.update({ where: { email }, data: { status: newStatus } });
+    return { success: true, message: `Status changed to ${newStatus}`, user: result };
+};
+exports.userProfileStatusUpdate = userProfileStatusUpdate;
+exports.authService = { login, getProfile, passwordUpdate, userProfileStatusUpdate: exports.userProfileStatusUpdate };
 //# sourceMappingURL=auth.service.js.map

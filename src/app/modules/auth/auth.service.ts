@@ -95,7 +95,7 @@ const getProfile = async (email: string) => {
 
 const passwordUpdate = async (email: string, payload: PasswordPayload) => {
   const user = await prisma.user.findUniqueOrThrow({where: {email, status: UserStatus.ACTIVE}});
-  
+
   const isCorrectPass = await bcryptjs.compare(payload.oldPassword, user.password);
   if (!isCorrectPass) throw new ServerError(status.BAD_REQUEST, "Password is incorrect");
 
@@ -106,4 +106,18 @@ const passwordUpdate = async (email: string, payload: PasswordPayload) => {
   return result;
 };
 
-export const authService = {login, getProfile, passwordUpdate};
+export const userProfileStatusUpdate = async (email: string) => {
+  const user = await prisma.user.findUniqueOrThrow({where: {email}});
+
+  if (user.status === UserStatus.BANNED) {
+    throw new ServerError(status.FORBIDDEN, "Banned users cannot be updated");
+  }
+
+  const newStatus = user.status === UserStatus.ACTIVE ? UserStatus.INACTIVE : UserStatus.ACTIVE;
+
+  const result = await prisma.user.update({where: {email}, data: {status: newStatus}});
+
+  return {success: true, message: `Status changed to ${newStatus}`, user: result};
+};
+
+export const authService = {login, getProfile, passwordUpdate, userProfileStatusUpdate};

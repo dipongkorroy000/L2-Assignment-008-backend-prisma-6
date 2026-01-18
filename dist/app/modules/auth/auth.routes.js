@@ -12,5 +12,6 @@ const router = express_1.default.Router();
 router.post("/login", auth_controller_1.authController.login);
 router.get("/profile", (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.GUIDE, client_1.UserRole.TOURIST), auth_controller_1.authController.getProfile);
 router.patch("/password-update", (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.GUIDE, client_1.UserRole.TOURIST), auth_controller_1.authController.passwordUpdate);
+router.patch("/profile-status-update", (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.GUIDE, client_1.UserRole.TOURIST), auth_controller_1.authController.userProfileStatusUpdate);
 exports.authRoutes = router;
 //# sourceMappingURL=auth.routes.js.map

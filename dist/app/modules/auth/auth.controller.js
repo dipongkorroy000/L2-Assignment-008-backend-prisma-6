@@ -39,5 +39,14 @@ const passwordUpdate = (0, catchAsync_1.default)(async (req, res, next) => {
         next(error);
     }
 });
-exports.authController = { login, getProfile, passwordUpdate };
+const userProfileStatusUpdate = (0, catchAsync_1.default)(async (req, res, next) => {
+    try {
+        const result = await auth_service_1.authService.userProfileStatusUpdate(req.token?.email);
+        (0, sendResponse_1.default)(res, { status: http_status_1.default.OK, success: true, message: "Update successfully!", data: result });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.authController = { login, getProfile, passwordUpdate, userProfileStatusUpdate };
 //# sourceMappingURL=auth.controller.js.map

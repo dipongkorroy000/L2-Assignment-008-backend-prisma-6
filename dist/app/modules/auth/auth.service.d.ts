@@ -1,4 +1,17 @@
 import type { Login, PasswordPayload } from "./auth.interface";
+export declare const userProfileStatusUpdate: (email: string) => Promise<{
+    success: boolean;
+    message: string;
+    user: {
+        email: string;
+        role: import("@prisma/client").$Enums.UserRole;
+        id: number;
+        password: string;
+        status: import("@prisma/client").$Enums.UserStatus;
+        createdAt: Date;
+        updatedAt: Date;
+    };
+}>;
 export declare const authService: {
     login: (payload: Login) => Promise<{
         accessToken: string;
@@ -54,6 +67,19 @@ export declare const authService: {
         status: import("@prisma/client").$Enums.UserStatus;
         createdAt: Date;
         updatedAt: Date;
+    }>;
+    userProfileStatusUpdate: (email: string) => Promise<{
+        success: boolean;
+        message: string;
+        user: {
+            email: string;
+            role: import("@prisma/client").$Enums.UserRole;
+            id: number;
+            password: string;
+            status: import("@prisma/client").$Enums.UserStatus;
+            createdAt: Date;
+            updatedAt: Date;
+        };
     }>;
 };
 //# sourceMappingURL=auth.service.d.ts.map

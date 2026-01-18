@@ -38,10 +38,21 @@ const getProfile = catchAsync(async (req: Request & {token?: JwtPayload}, res: R
 const passwordUpdate = catchAsync(async (req: Request & {token?: JwtPayload}, res: Response, next: NextFunction) => {
   try {
     const result = await authService.passwordUpdate(req.token?.email as string, req.body);
+
     sendResponse(res, {status: status.OK, success: true, message: "Update successfully!", data: result});
   } catch (error) {
     next(error);
   }
 });
 
-export const authController = {login, getProfile, passwordUpdate};
+const userProfileStatusUpdate = catchAsync(async (req: Request & {token?: JwtPayload}, res: Response, next: NextFunction) => {
+  try {
+    const result = await authService.userProfileStatusUpdate(req.token?.email);
+
+    sendResponse(res, {status: status.OK, success: true, message: "Update successfully!", data: result});
+  } catch (error) {
+    next(error);
+  }
+});
+
+export const authController = {login, getProfile, passwordUpdate, userProfileStatusUpdate};
